@@ -101,7 +101,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script>
-  // ── YOUR CLOUDFLARE WORKER URL ───────────────────────────────
+  // ── CLOUDFLARE WORKER URL ────────────────────────────────────
   const PROXY_URL = "https://polished-dust-8e7a.josiahkondo.workers.dev";
   // ────────────────────────────────────────────────────────────
 </script>
@@ -302,8 +302,15 @@ function App() {
     const senderContext = myBio ? myBio : "a student";
     const targetContext = targetGoal ? "Their career target: " + targetGoal + "." : "";
 
-    // ONE search only — multiple searches blow past the 50k token/min rate limit
-    const researchPrompt = "Do exactly ONE web search and return a plain-text summary of people you find. Search: site:linkedin.com " + searchDesc + ". " + targetContext + " List each person with: full name, title, company, grad year if known, LinkedIn URL, source URL. Be brief.";
+    // Research prompt — targets LinkedIn via site: operator + public directories
+    const researchPrompt = "Find " + count + " real people matching: " + searchDesc + ".\n" +
+      "Sender: " + senderName + " (" + senderContext + "). " + targetContext + "\n\n" +
+      "Use these search strategies in order:\n" +
+      "1. Search Google with site:linkedin.com plus key terms, e.g.: site:linkedin.com \"Boston College\" \"JPMorgan\" \"investment banking\" \"analyst\"\n" +
+      "2. Search for club rosters, alumni directories, athletic department pages, and company team pages\n" +
+      "3. When you find a list or roster page, read it fully and extract ALL matching people\n" +
+      "4. For each person found, note their full name, current title, company, graduation year, LinkedIn URL, and the page where you found them\n\n" +
+      "Do 2-3 targeted searches. Write a brief plain-text summary of every person you found with all details.";
 
     const jsonPrompt = "Convert these research notes to a JSON array. Return ONLY the array starting with [. No explanation.\n\n" +
       "Notes:\n" + "FINDINGS_PLACEHOLDER" + "\n\n" +
@@ -321,12 +328,10 @@ function App() {
       // Turn 1 — web research (keep max_tokens LOW to limit token usage)
       const r1 = await fetch(PROXY_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-haiku-4-5-20251001",
-          max_tokens: 400,
+          max_tokens: 700,
           tools: [{ type: "web_search_20250305", name: "web_search" }],
           messages: [{ role: "user", content: researchPrompt }]
         })
@@ -351,16 +356,14 @@ function App() {
       if (!findings.trim()) throw new Error("The search returned no results. Try adjusting your criteria.");
 
       // Pause to spread token usage across the rate-limit window
-      await new Promise(r => setTimeout(r, 15000));
+      await new Promise(r => setTimeout(r, 8000));
 
       // Turn 2 — fresh conversation, no tool history, just format findings as JSON
       const finalPrompt = jsonPrompt.replace("FINDINGS_PLACEHOLDER", findings);
 
       const r2 = await fetch(PROXY_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-haiku-4-5-20251001",
           max_tokens: 2500,
