@@ -101,8 +101,8 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script>
-  // ── PASTE YOUR ANTHROPIC API KEY HERE ───────────────────────
-  const ANTHROPIC_API_KEY = "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";
+  // ── YOUR CLOUDFLARE WORKER URL ───────────────────────────────
+  const PROXY_URL = "https://polished-dust-8e7a.josiahkondo.workers.dev";
   // ────────────────────────────────────────────────────────────
 </script>
 <script type="text/babel">
@@ -326,13 +326,10 @@ function App() {
 
     try {
       // Turn 1 — web research (keep max_tokens LOW to limit token usage)
-      const r1 = await fetch("https://api.anthropic.com/v1/messages", {
+      const r1 = await fetch(PROXY_URL, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "x-api-key": ANTHROPIC_API_KEY,
-          "anthropic-version": "2023-06-01",
-          "anthropic-dangerous-direct-browser-access": "true"
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           model: "claude-haiku-4-5-20251001",
@@ -366,13 +363,10 @@ function App() {
       // Turn 2 — fresh conversation, no tool history, just format findings as JSON
       const finalPrompt = jsonPrompt.replace("FINDINGS_PLACEHOLDER", findings);
 
-      const r2 = await fetch("https://api.anthropic.com/v1/messages", {
+      const r2 = await fetch(PROXY_URL, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "x-api-key": ANTHROPIC_API_KEY,
-          "anthropic-version": "2023-06-01",
-          "anthropic-dangerous-direct-browser-access": "true"
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           model: "claude-haiku-4-5-20251001",
