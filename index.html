@@ -284,12 +284,12 @@ function App() {
     const cParts = [
       criteria.school   ? "School: " + criteria.school : null,
       criteria.major    ? "Major: " + criteria.major : null,
-      criteria.gradYear ? "Grad year (HARD FILTER): " + criteria.gradYear : null,
+      criteria.gradYear ? "Graduation year (hard filter): " + criteria.gradYear : null,
       criteria.company  ? "Company: " + criteria.company : null,
       criteria.title    ? "Title: " + criteria.title : null,
       criteria.industry ? "Industry: " + criteria.industry : null,
       criteria.location ? "Location: " + criteria.location : null,
-      criteria.prevExp  ? "Prev experience: " + criteria.prevExp : null,
+      criteria.prevExp  ? "Previous experience: " + criteria.prevExp : null,
       connType !== "Any level" ? "Connection type: " + connType : null,
     ].filter(Boolean);
 
@@ -299,85 +299,32 @@ function App() {
       : (cStr || "any professional");
 
     const senderName = myName || "[Your Name]";
-    const senderContext = myBio ? myBio : "a student";
-    const targetContext = targetGoal ? "Their career target: " + targetGoal + "." : "";
-
-    const researchPrompt = "Search the web and find " + count + " people who match this description: " + searchDesc + ". " + targetContext + "\n\n" +
-      "Search for: alumni club websites, university organization pages, company about/team pages, conference speaker bios, news articles, and professional association member lists. " +
-      "These are all publicly published sources. Read any list or roster pages you find and extract every relevant person. " +
-      "For each person summarize: their name, role, employer, school, graduation year if shown, any profile URL you see, and the URL of the page where you found them. " +
-      "Write a plain text summary of your findings.";
-
-    const jsonPrompt = "Convert these research notes into a JSON array. Return ONLY the array starting with [. No explanation. If a person has no real name (e.g. \"Unable to retrieve\" or \"No results\"), skip them entirely — do not include placeholder entries.\n\n" +
-      "Notes:\n" + "FINDINGS_PLACEHOLDER" + "\n\n" +
-      "Each object: {\"name\":\"\",\"title\":\"\",\"company\":\"\",\"location\":\"\",\"linkedinUrl\":\"url or null\"," +
-      "\"otherSources\":[{\"label\":\"\",\"url\":\"\"}]," +
-      "\"matchScore\":85,\"tags\":[\"tag1\",\"tag2\",\"tag3\"]," +
-      "\"whyRelevant\":\"2 sentences on why they are a great connection.\"," +
-      "\"theirPath\":\"1 sentence on how they got from college to their current role, if discernible. null if unknown.\"," +
-      "\"conversationStarters\":[\"Question 1 specific to their background\",\"Question 2\",\"Question 3\"]," +
-      "\"email\":\"Subject: Subject line\\n\\nOpening line.\\n\\nBody under 80 words. Tone: " +
-      (connType.includes("Senior") || connType.includes("Mid") ? "professional and respectful" : "warm and peer-like") +
-      ". Reference their specific background.\\n\\nBest,\\n" + senderName + "\"}\n\nStart with [:";
+    const targetContext = targetGoal ? "Career target: " + targetGoal + "." : "";
 
     try {
-      // Turn 1 — web research (keep max_tokens LOW to limit token usage)
-      const r1 = await fetch(PROXY_URL, {
+      // Single request to Worker — Worker handles both API turns + pause internally
+      const res = await fetch(PROXY_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "claude-haiku-4-5-20251001",
-          max_tokens: 400,
-          tools: [{ type: "web_search_20250305", name: "web_search" }],
-          messages: [{ role: "user", content: researchPrompt }]
+          searchDesc,
+          targetContext,
+          count,
+          outreach,
+          senderName,
+          connType
         })
       });
 
-      if (!r1.ok) {
-        const e = await r1.json().catch(() => ({}));
-        throw new Error(e.error?.message || "HTTP " + r1.status);
-      }
+      const data = await res.json();
 
-      const d1 = await r1.json();
+      if (data.error) throw new Error(data.error);
 
-      // Extract ONLY final text blocks — not tool_result blocks (which are huge)
-      const findings = d1.content
-        .filter(b => b.type === "text")
-        .map(b => b.text)
-        .join("\n")
-        .slice(0, 2000);
+      setRawDebug(data.debug || "");
 
-      setRawDebug(findings.slice(0, 400));
-
-      if (!findings.trim()) throw new Error("The search returned no results. Try adjusting your criteria.");
-
-      // Pause to spread token usage across the rate-limit window
-      await new Promise(r => setTimeout(r, 15000));
-
-      // Turn 2 — fresh conversation, no tool history, just format findings as JSON
-      const finalPrompt = jsonPrompt.replace("FINDINGS_PLACEHOLDER", findings);
-
-      const r2 = await fetch(PROXY_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-haiku-4-5-20251001",
-          max_tokens: 2500,
-          messages: [{ role: "user", content: finalPrompt }]
-        })
-      });
-
-      if (!r2.ok) {
-        const e = await r2.json().catch(() => ({}));
-        throw new Error(e.error?.message || "HTTP " + r2.status);
-      }
-
-      const d2 = await r2.json();
-      const jsonText = d2.content.filter(b => b.type === "text").map(b => b.text).join("\n");
-      const parsed = extractJSON(jsonText);
-
+      const parsed = extractJSON(data.jsonText || "");
       if (!parsed || !Array.isArray(parsed) || parsed.length === 0) {
-        throw new Error("Could not parse results.\n\nRaw: " + jsonText.slice(0, 300));
+        throw new Error("Could not parse results.\n\nRaw: " + (data.jsonText || "").slice(0, 300));
       }
 
       setResults(parsed);
