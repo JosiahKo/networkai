@@ -327,7 +327,7 @@ function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-haiku-4-5-20251001",
-          max_tokens: 700,
+          max_tokens: 400,
           tools: [{ type: "web_search_20250305", name: "web_search" }],
           messages: [{ role: "user", content: researchPrompt }]
         })
@@ -352,7 +352,7 @@ function App() {
       if (!findings.trim()) throw new Error("The search returned no results. Try adjusting your criteria.");
 
       // Pause to spread token usage across the rate-limit window
-      await new Promise(r => setTimeout(r, 8000));
+      await new Promise(r => setTimeout(r, 15000));
 
       // Turn 2 — fresh conversation, no tool history, just format findings as JSON
       const finalPrompt = jsonPrompt.replace("FINDINGS_PLACEHOLDER", findings);
