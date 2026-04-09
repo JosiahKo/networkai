@@ -2,255 +2,191 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Dead Mentors</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>TrueLabel</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --parchment:#f7f2e8;
-  --parchment2:#f0e9d6;
-  --parchment3:#e8dfc8;
-  --ink:#1c1208;
-  --ink2:#5c4a2a;
-  --ink3:#8b7355;
-  --ink4:#b8a888;
-  --rust:#8b3a1a;
-  --rust2:#a84820;
-  --sepia:#c8a96e;
-  --border:#d4c4a0;
-  --border2:#c0ae88;
+  --bg:#0a0a0a;
+  --surface:#111;
+  --surface2:#1a1a1a;
+  --border:#222;
+  --border2:#2e2e2e;
+  --text:#f0f0f0;
+  --text2:#888;
+  --text3:#555;
+  --green:#00d084;
+  --green-bg:#001a0f;
+  --amber:#f5a623;
+  --amber-bg:#1a1000;
+  --red:#ff4444;
+  --red-bg:#1a0000;
+  --blue:#4da6ff;
 }
-html{background:var(--parchment);}
-body{
-  font-family:'EB Garamond',Georgia,serif;
-  background:var(--parchment);
-  color:var(--ink);
-  min-height:100vh;
-  font-size:17px;
-  line-height:1.7;
-  -webkit-font-smoothing:antialiased;
-}
+html,body{background:var(--bg);min-height:100vh;}
+body{font-family:'Space Grotesk',sans-serif;color:var(--text);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;}
 
-/* Subtle paper texture via gradient */
-body::before{
-  content:'';
-  position:fixed;inset:0;
-  background:
-    radial-gradient(ellipse at 20% 50%, rgba(180,160,100,0.08) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 20%, rgba(200,180,120,0.06) 0%, transparent 50%);
-  pointer-events:none;
-  z-index:0;
-}
-
-.shell{
-  max-width:660px;margin:0 auto;
-  padding:0 32px 80px;
-  min-height:100vh;
-  display:flex;flex-direction:column;
-  position:relative;z-index:1;
-}
+.shell{max-width:540px;margin:0 auto;padding:0 20px 80px;min-height:100vh;display:flex;flex-direction:column;}
 
 /* Header */
-.top-bar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:36px 0 32px;
-  border-bottom:1px solid var(--border);
-  margin-bottom:52px;flex-shrink:0;
-}
-.wordmark{
-  font-family:'Cormorant Garamond',serif;
-  font-size:20px;font-weight:300;
-  letter-spacing:0.08em;
-  color:var(--ink2);
-  text-transform:uppercase;
-  font-style:italic;
-}
-.wordmark em{color:var(--rust);font-style:italic;}
-.progress-track{display:flex;gap:6px;}
-.ptick{width:24px;height:1px;background:var(--border2);transition:background 0.4s;}
-.ptick.done{background:var(--ink3);}
-.ptick.active{background:var(--rust);}
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:28px 0 24px;border-bottom:1px solid var(--border);margin-bottom:36px;flex-shrink:0;}
+.wordmark{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;letter-spacing:0.02em;color:var(--text);}
+.wordmark span{color:var(--green);}
+.tagline{font-size:11px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;}
 
-/* Steps */
-.step-wrap{flex:1;display:flex;flex-direction:column;min-height:460px;animation:emerge 0.4s ease both;}
-@keyframes emerge{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
-.step-tag{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--rust);margin-bottom:22px;font-family:'EB Garamond',serif;}
-.step-q{
-  font-family:'Cormorant Garamond',serif;
-  font-size:36px;font-weight:300;font-style:italic;
-  color:var(--ink);margin-bottom:12px;
-  line-height:1.2;letter-spacing:-0.01em;
-}
-.step-hint{font-size:15px;color:var(--ink2);margin-bottom:38px;line-height:1.75;font-style:italic;}
+/* Scanner area */
+.scan-wrap{flex:1;display:flex;flex-direction:column;align-items:center;}
+.scan-hero{text-align:center;margin-bottom:36px;width:100%;}
+.scan-title{font-size:28px;font-weight:700;letter-spacing:-0.02em;margin-bottom:8px;}
+.scan-hint{font-size:14px;color:var(--text2);line-height:1.6;}
 
-/* Inputs */
-.input-line{
-  width:100%;background:transparent;border:none;
-  border-bottom:1px solid var(--border2);
-  color:var(--ink);font-family:'EB Garamond',serif;
-  font-size:19px;padding:10px 0;outline:none;
-  transition:border-color 0.2s;
+/* Camera viewfinder */
+.viewfinder-wrap{
+  width:100%;max-width:360px;margin:0 auto 28px;
+  position:relative;background:#000;
+  border:1px solid var(--border2);overflow:hidden;
+  border-radius:4px;
 }
-.input-line::placeholder{color:var(--ink4);}
-.input-line:focus{border-bottom-color:var(--rust);}
+.viewfinder-wrap video{width:100%;display:block;aspect-ratio:4/3;object-fit:cover;}
+.viewfinder-wrap canvas{position:absolute;top:0;left:0;width:100%;height:100%;}
+.scan-line{
+  position:absolute;left:10%;right:10%;height:2px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);
+  animation:scanline 2s ease-in-out infinite;
+  box-shadow:0 0 8px var(--green);
+}
+@keyframes scanline{0%{top:20%;}50%{top:75%;}100%{top:20%;}}
+.corner{position:absolute;width:20px;height:20px;}
+.corner-tl{top:8px;left:8px;border-top:2px solid var(--green);border-left:2px solid var(--green);}
+.corner-tr{top:8px;right:8px;border-top:2px solid var(--green);border-right:2px solid var(--green);}
+.corner-bl{bottom:8px;left:8px;border-bottom:2px solid var(--green);border-left:2px solid var(--green);}
+.corner-br{bottom:8px;right:8px;border-bottom:2px solid var(--green);border-right:2px solid var(--green);}
+.scan-status{
+  position:absolute;bottom:10px;left:0;right:0;text-align:center;
+  font-family:'Space Mono',monospace;font-size:10px;color:var(--green);
+  letter-spacing:0.1em;text-transform:uppercase;
+}
 
-.textarea-field{
-  width:100%;background:var(--parchment2);
-  border:1px solid var(--border);
-  color:var(--ink);font-family:'EB Garamond',serif;
-  font-size:17px;line-height:1.75;
-  padding:16px 18px;outline:none;resize:none;
-  transition:border-color 0.2s;min-height:100px;
+/* Buttons */
+.btn-primary{
+  width:100%;max-width:360px;padding:14px;
+  background:var(--green);color:#000;border:none;
+  font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;
+  cursor:pointer;letter-spacing:0.05em;text-transform:uppercase;
+  transition:opacity 0.15s;border-radius:3px;
 }
-.textarea-field::placeholder{color:var(--ink4);font-style:italic;}
-.textarea-field:focus{border-color:var(--rust);}
-
-/* Chips */
-.chip-set{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
-.chip{
-  padding:7px 18px;border:1px solid var(--border2);
-  background:transparent;color:var(--ink2);
-  font-family:'EB Garamond',serif;font-size:15px;
-  cursor:pointer;transition:all 0.15s;
-  font-style:italic;
-}
-.chip:hover{border-color:var(--rust);color:var(--rust);}
-.chip.on{border-color:var(--rust);color:var(--parchment);background:var(--rust);}
-
-/* Nav */
-.nav{display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:44px;}
-.btn-go{
-  padding:11px 28px;background:var(--ink);color:var(--parchment);
-  border:none;font-family:'EB Garamond',serif;
-  font-size:15px;letter-spacing:0.06em;
-  cursor:pointer;transition:background 0.2s;
-  font-style:italic;
-}
-.btn-go:hover{background:var(--rust);}
-.btn-back{
-  padding:11px 18px;background:transparent;color:var(--ink3);
+.btn-primary:hover{opacity:0.88;}
+.btn-primary:disabled{opacity:0.3;cursor:not-allowed;}
+.btn-secondary{
+  width:100%;max-width:360px;padding:12px;margin-top:10px;
+  background:transparent;color:var(--text2);
   border:1px solid var(--border2);
-  font-family:'EB Garamond',serif;font-size:15px;
-  cursor:pointer;transition:all 0.15s;
+  font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:500;
+  cursor:pointer;letter-spacing:0.04em;transition:all 0.15s;border-radius:3px;
 }
-.btn-back:hover{color:var(--ink);border-color:var(--ink3);}
-.btn-skip{
-  margin-left:auto;background:none;border:none;
-  color:var(--ink4);font-family:'EB Garamond',serif;
-  font-size:14px;cursor:pointer;font-style:italic;
+.btn-secondary:hover{border-color:var(--text3);color:var(--text);}
+
+/* Manual input */
+.manual-wrap{width:100%;max-width:360px;margin:20px auto 0;text-align:center;}
+.manual-label{font-size:11px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;}
+.manual-row{display:flex;gap:8px;}
+.manual-input{
+  flex:1;background:var(--surface);border:1px solid var(--border2);
+  color:var(--text);font-family:'Space Mono',monospace;font-size:14px;
+  padding:10px 12px;outline:none;transition:border-color 0.2s;border-radius:3px;
 }
-.btn-skip:hover{color:var(--ink3);}
+.manual-input::placeholder{color:var(--text3);}
+.manual-input:focus{border-color:var(--green);}
+.manual-btn{
+  padding:10px 16px;background:var(--surface2);color:var(--text);
+  border:1px solid var(--border2);font-family:'Space Grotesk',sans-serif;
+  font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s;border-radius:3px;
+}
+.manual-btn:hover{border-color:var(--green);color:var(--green);}
 
 /* Loading */
-.load-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:460px;text-align:center;}
-.load-hourglass{font-size:28px;margin-bottom:24px;animation:flicker 3s ease-in-out infinite;}
-@keyframes flicker{0%,100%{opacity:1;}50%{opacity:0.4;}}
-.load-msg{font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:var(--ink2);margin-bottom:8px;}
-.load-sub{font-size:13px;color:var(--ink3);letter-spacing:0.05em;}
+.load-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 0;}
+.load-ring{width:40px;height:40px;border:2px solid var(--border2);border-top-color:var(--green);border-radius:50%;animation:spin 0.9s linear infinite;margin-bottom:24px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.load-msg{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px;}
+.load-sub{font-size:12px;color:var(--text2);font-family:'Space Mono',monospace;}
 
 /* Results */
-.results-wrap{flex:1;padding-top:4px;}
-.results-head{margin-bottom:8px;}
-.results-title{font-family:'Cormorant Garamond',serif;font-size:38px;font-style:italic;font-weight:300;letter-spacing:-0.01em;color:var(--ink);}
-.results-sub{font-size:13px;color:var(--ink3);margin-top:6px;letter-spacing:0.06em;text-transform:uppercase;}
-.results-note{
-  font-size:14px;color:var(--ink2);line-height:1.75;
-  padding:14px 18px;background:var(--parchment2);
-  border-left:2px solid var(--rust);
-  margin:20px 0 36px;font-style:italic;
-}
+.results-wrap{flex:1;width:100%;}
 
-/* Mentor card */
-.mentor-card{border-top:1px solid var(--border);padding:34px 0;}
-.mentor-card:last-of-type{border-bottom:1px solid var(--border);}
-.mentor-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;}
-.mentor-name{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:400;letter-spacing:-0.01em;}
-.mentor-years{font-size:13px;color:var(--ink3);font-style:italic;margin-top:2px;}
-.mentor-source{
-  font-size:12px;color:var(--rust);
-  letter-spacing:0.05em;text-transform:uppercase;
-  margin-top:2px;
-}
+.product-header{display:flex;gap:14px;align-items:flex-start;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border);}
+.product-img{width:64px;height:64px;object-fit:contain;background:var(--surface);border:1px solid var(--border2);border-radius:4px;flex-shrink:0;}
+.product-img-placeholder{width:64px;height:64px;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px;}
+.product-name{font-size:18px;font-weight:700;margin-bottom:2px;letter-spacing:-0.01em;}
+.product-brand{font-size:13px;color:var(--text2);}
 
-.mentor-context{
-  font-size:14px;color:var(--ink2);line-height:1.7;
-  margin:16px 0;font-style:italic;
-  padding-left:16px;border-left:1px solid var(--border2);
+/* Verdict banner */
+.verdict-banner{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 16px;border-radius:4px;margin-bottom:20px;
 }
+.verdict-banner.clean{background:var(--green-bg);border:1px solid #00401a;}
+.verdict-banner.caution{background:var(--amber-bg);border:1px solid #3a2800;}
+.verdict-banner.warning{background:var(--red-bg);border:1px solid #400000;}
+.verdict-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.verdict-banner.clean .verdict-dot{background:var(--green);}
+.verdict-banner.caution .verdict-dot{background:var(--amber);}
+.verdict-banner.warning .verdict-dot{background:var(--red);}
+.verdict-text{font-size:14px;font-weight:600;}
+.verdict-banner.clean .verdict-text{color:var(--green);}
+.verdict-banner.caution .verdict-text{color:var(--amber);}
+.verdict-banner.warning .verdict-text{color:var(--red);}
 
-/* The actual passage — the centrepiece */
-.passage-wrap{
-  background:var(--parchment2);
-  border:1px solid var(--border);
-  padding:24px 26px;
-  margin:18px 0;
-  position:relative;
+/* Key facts row */
+.facts-row{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.fact-pill{
+  padding:5px 12px;background:var(--surface2);
+  border:1px solid var(--border2);border-radius:20px;
+  font-size:12px;font-family:'Space Mono',monospace;color:var(--text2);
 }
-.passage-wrap::before{
-  content:'\201C';
-  font-family:'Cormorant Garamond',serif;
-  font-size:80px;color:var(--sepia);
-  position:absolute;top:-10px;left:12px;
-  line-height:1;opacity:0.6;
-}
-.passage-text{
-  font-family:'Cormorant Garamond',serif;
-  font-size:20px;font-style:italic;
-  line-height:1.65;color:var(--ink);
-  padding-left:24px;
-}
-.passage-attr{
-  font-size:13px;color:var(--ink3);
-  margin-top:12px;padding-left:24px;
-  letter-spacing:0.03em;
-}
+.fact-pill strong{color:var(--text);font-weight:700;}
 
-.resonance-text{font-size:15px;color:var(--ink2);line-height:1.75;margin:14px 0;}
+/* Section cards */
+.section-card{background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:16px 18px;margin-bottom:10px;}
+.section-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.section-status{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.section-status.clean{background:var(--green);}
+.section-status.caution{background:var(--amber);}
+.section-status.warning{background:var(--red);}
+.section-title{font-size:12px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);}
+.section-body{font-size:13px;color:var(--text);line-height:1.7;}
+.section-source{margin-top:8px;}
+.section-source a{font-size:11px;color:var(--blue);text-decoration:none;letter-spacing:0.03em;}
+.section-source a:hover{text-decoration:underline;}
 
-.mentor-footer{display:flex;align-items:center;gap:16px;margin-top:14px;}
-.source-link{
-  font-size:12px;color:var(--rust);
-  border-bottom:1px solid var(--border2);
-  text-decoration:none;padding-bottom:1px;
-  letter-spacing:0.05em;text-transform:uppercase;
-  transition:all 0.15s;
+/* Bottom line */
+.bottom-line{margin-top:20px;padding:18px;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;}
+.bottom-line-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;}
+.bottom-line-text{font-size:14px;color:var(--text);line-height:1.75;}
+
+.scan-again-btn{
+  margin-top:24px;width:100%;padding:12px;
+  background:transparent;color:var(--text2);
+  border:1px solid var(--border2);
+  font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;
+  cursor:pointer;letter-spacing:0.05em;text-transform:uppercase;
+  transition:all 0.15s;border-radius:3px;
 }
-.source-link:hover{border-color:var(--rust);}
-
-.restart-btn{
-  margin-top:40px;background:none;border:none;
-  font-family:'EB Garamond',serif;font-size:14px;
-  color:var(--ink3);cursor:pointer;
-  font-style:italic;letter-spacing:0.03em;
-}
-.restart-btn:hover{color:var(--ink2);}
-
-/* Summary */
-.sum-line{font-size:16px;color:var(--ink2);margin-bottom:10px;line-height:1.8;font-style:italic;}
-.sum-line strong{color:var(--ink);font-weight:500;font-style:normal;}
+.scan-again-btn:hover{border-color:var(--green);color:var(--green);}
 
 /* Error */
-.err-box{
-  background:var(--parchment2);border:1px solid #c4a08a;
-  padding:18px 20px;font-size:14px;color:var(--rust);
-  line-height:1.7;margin-top:20px;font-style:italic;
-}
-.err-raw{margin-top:8px;font-size:11px;color:var(--ink4);font-family:monospace;font-style:normal;word-break:break-all;max-height:80px;overflow-y:auto;}
+.err-box{background:var(--red-bg);border:1px solid #400000;border-radius:4px;padding:16px;font-size:13px;color:#ff8888;line-height:1.7;margin-top:20px;}
 
-.divider{
-  text-align:center;color:var(--border2);
-  font-family:'Cormorant Garamond',serif;
-  font-size:18px;letter-spacing:0.3em;
-  margin:8px 0;
-}
-
-@media(max-width:500px){.step-q{font-size:28px;}.passage-text{font-size:17px;}}
+@media(max-width:400px){.scan-title{font-size:24px;}}
 </style>
 </head>
 <body>
 <div id="root"></div>
+
+<!-- ZXing barcode scanner library -->
+<script src="https://unpkg.com/@zxing/library@0.21.3/umd/index.min.js"></script>
 <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -262,244 +198,253 @@ body::before{
 <script type="text/babel">
 const { useState, useEffect, useRef } = React;
 
-const TOTAL_STEPS = 3;
-
-const EMOTIONS = [
-  "Anxious", "Stuck", "Lost", "Overwhelmed",
-  "Like a fraud", "Afraid to fail", "Directionless",
-  "Burnt out", "Lonely", "Restless",
-];
-
-const COUNTS = ["3", "5"];
-
 const LOAD_MSGS = [
-  "Searching the archives...",
-  "Reading letters never meant for us...",
-  "Finding the right voices...",
-  "Crossing centuries...",
-  "Almost there...",
+  "Looking up product...",
+  "Checking FDA recall database...",
+  "Searching for lawsuits...",
+  "Analyzing ingredients...",
+  "Writing your report...",
 ];
+
+const STATUS_COLORS = { clean: "#00d084", caution: "#f5a623", warning: "#ff4444" };
 
 function extractJSON(raw) {
   try { return JSON.parse(raw.trim()); } catch(_) {}
   const t = raw.replace(/```json\s*/gi,"").replace(/```\s*/g,"").trim();
   try { return JSON.parse(t); } catch(_) {}
-  const s = t.indexOf("["), e = t.lastIndexOf("]");
+  const s = t.indexOf("{"), e = t.lastIndexOf("}");
   if (s !== -1 && e > s) { try { return JSON.parse(t.slice(s,e+1)); } catch(_) {} }
   return null;
 }
 
-function ProgressTrack({ current, total }) {
+function ScanScreen({ onBarcode }) {
+  const videoRef = useRef(null);
+  const [scanning, setScanning] = useState(false);
+  const [cameraError, setCameraError] = useState(false);
+  const [manualCode, setManualCode] = useState("");
+  const readerRef = useRef(null);
+
+  async function startScanner() {
+    if (!window.ZXing) { setCameraError(true); return; }
+    try {
+      const hints = new Map();
+      const formats = [
+        window.ZXing.BarcodeFormat.EAN_13,
+        window.ZXing.BarcodeFormat.EAN_8,
+        window.ZXing.BarcodeFormat.UPC_A,
+        window.ZXing.BarcodeFormat.UPC_E,
+        window.ZXing.BarcodeFormat.CODE_128,
+      ];
+      hints.set(window.ZXing.DecodeHintType.POSSIBLE_FORMATS, formats);
+      const reader = new window.ZXing.BrowserMultiFormatReader(hints);
+      readerRef.current = reader;
+      setScanning(true);
+      const devices = await window.ZXing.BrowserCodeReader.listVideoInputDevices();
+      const deviceId = devices.length > 1 ? devices[devices.length - 1].deviceId : undefined;
+      reader.decodeFromVideoDevice(deviceId, videoRef.current, (result, err) => {
+        if (result) {
+          reader.reset();
+          setScanning(false);
+          onBarcode(result.getText());
+        }
+      });
+    } catch(e) {
+      setCameraError(true);
+      setScanning(false);
+    }
+  }
+
+  useEffect(() => {
+    return () => { if (readerRef.current) readerRef.current.reset(); };
+  }, []);
+
+  function stopScanner() {
+    if (readerRef.current) readerRef.current.reset();
+    setScanning(false);
+  }
+
+  function submitManual() {
+    const code = manualCode.trim();
+    if (code.length >= 8) onBarcode(code);
+  }
+
   return (
-    <div className="progress-track">
-      {Array.from({length:total}).map((_,i) => (
-        <div key={i} className={"ptick"+(i<current?" done":"")+(i===current?" active":"")} />
-      ))}
+    <div className="scan-wrap">
+      <div className="scan-hero">
+        <div className="scan-title">What's really in it?</div>
+        <div className="scan-hint">Scan any food barcode for recalls, lawsuits, ingredient concerns, and the honest story behind the label.</div>
+      </div>
+
+      {scanning ? (
+        <>
+          <div className="viewfinder-wrap">
+            <video ref={videoRef} muted playsInline />
+            <canvas />
+            <div className="scan-line" />
+            <div className="corner corner-tl" />
+            <div className="corner corner-tr" />
+            <div className="corner corner-bl" />
+            <div className="corner corner-br" />
+            <div className="scan-status">Scanning...</div>
+          </div>
+          <button className="btn-secondary" style={{maxWidth:360,margin:"0 auto"}} onClick={stopScanner}>Cancel</button>
+        </>
+      ) : (
+        <>
+          <button className="btn-primary" onClick={startScanner} disabled={cameraError}>
+            {cameraError ? "Camera unavailable" : "Scan barcode"}
+          </button>
+
+          <div className="manual-wrap">
+            <div className="manual-label">Or enter barcode manually</div>
+            <div className="manual-row">
+              <input
+                className="manual-input"
+                placeholder="e.g. 016000275287"
+                value={manualCode}
+                onChange={e => setManualCode(e.target.value.replace(/\D/g,""))}
+                onKeyDown={e => e.key === "Enter" && submitManual()}
+                maxLength={14}
+                inputMode="numeric"
+              />
+              <button className="manual-btn" onClick={submitManual} disabled={manualCode.length < 8}>Go</button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
 
-function MentorCard({ mentor, idx }) {
+function LoadingScreen({ msg }) {
   return (
-    <div className="mentor-card">
-      <div className="mentor-top">
+    <div className="load-wrap">
+      <div className="load-ring" />
+      <div className="load-msg">{msg}</div>
+      <div className="load-sub">Checking public records</div>
+    </div>
+  );
+}
+
+function ResultsScreen({ report, product, onReset }) {
+  if (!report) return null;
+  const verdict = report.overallVerdict || "caution";
+
+  return (
+    <div className="results-wrap">
+      <div className="product-header">
+        {product.imageUrl
+          ? <img className="product-img" src={product.imageUrl} alt={product.name} onError={e => e.target.style.display="none"} />
+          : <div className="product-img-placeholder">🏷</div>
+        }
         <div>
-          <div className="mentor-name">{mentor.name}</div>
-          {mentor.years && <div className="mentor-years">{mentor.years}</div>}
+          <div className="product-name">{product.name}</div>
+          <div className="product-brand">{product.brand}</div>
         </div>
       </div>
-      {mentor.sourceTitle && (
-        <div className="mentor-source">
-          {mentor.sourceTitle}{mentor.sourceDate ? " · " + mentor.sourceDate : ""}
+
+      <div className={"verdict-banner " + verdict}>
+        <div className="verdict-dot" />
+        <div className="verdict-text">{report.verdictReason || verdict.toUpperCase()}</div>
+      </div>
+
+      {report.keyFacts && report.keyFacts.length > 0 && (
+        <div className="facts-row">
+          {report.keyFacts.map((f,i) => (
+            <div key={i} className="fact-pill"><strong>{f.label}:</strong> {f.value}</div>
+          ))}
         </div>
       )}
 
-      {mentor.context && <div className="mentor-context">{mentor.context}</div>}
-
-      {mentor.passage && (
-        <div className="passage-wrap">
-          <div className="passage-text">{mentor.passage}</div>
-          {mentor.name && (
-            <div className="passage-attr">— {mentor.name}{mentor.sourceDate ? ", " + mentor.sourceDate : ""}</div>
+      {report.sections && report.sections.map((s,i) => (
+        <div key={i} className="section-card">
+          <div className="section-top">
+            <div className={"section-status " + (s.status||"clean")} />
+            <div className="section-title">{s.title}</div>
+          </div>
+          <div className="section-body">{s.summary}</div>
+          {s.sourceUrl && s.sourceUrl !== "null" && (
+            <div className="section-source">
+              <a href={s.sourceUrl} target="_blank" rel="noopener noreferrer">
+                Source: {s.sourceLabel || s.sourceUrl} ↗
+              </a>
+            </div>
           )}
         </div>
+      ))}
+
+      {report.bottomLine && (
+        <div className="bottom-line">
+          <div className="bottom-line-label">Bottom line</div>
+          <div className="bottom-line-text">{report.bottomLine}</div>
+        </div>
       )}
 
-      {mentor.resonance && <div className="resonance-text">{mentor.resonance}</div>}
-
-      <div className="mentor-footer">
-        {mentor.sourceUrl && mentor.sourceUrl !== "null" && (
-          <a className="source-link" href={mentor.sourceUrl} target="_blank" rel="noopener noreferrer">
-            Read original source ↗
-          </a>
-        )}
-        {mentor.sourceLabel && !mentor.sourceUrl && (
-          <span style={{fontSize:12,color:"var(--ink3)",letterSpacing:"0.04em",textTransform:"uppercase"}}>{mentor.sourceLabel}</span>
-        )}
-      </div>
+      <button className="scan-again-btn" onClick={onReset}>← Scan another product</button>
     </div>
   );
 }
 
 function App() {
-  const [step, setStep] = useState(0);
-  const [problem, setProblem] = useState("");
-  const [emotion, setEmotion] = useState("Anxious");
-  const [count, setCount] = useState("3");
-
-  const [loading, setLoading] = useState(false);
-  const [loadIdx, setLoadIdx] = useState(0);
-  const [results, setResults] = useState(null);
+  const [screen, setScreen] = useState("scan");
+  const [loadMsg, setLoadMsg] = useState(LOAD_MSGS[0]);
+  const [report, setReport] = useState(null);
+  const [product, setProduct] = useState(null);
   const [error, setError] = useState("");
-  const [rawDebug, setRawDebug] = useState("");
-  const timerRef = useRef(null);
+  const loadTimerRef = useRef(null);
 
-  useEffect(() => {
-    if (loading) {
-      setLoadIdx(0);
-      timerRef.current = setInterval(() => setLoadIdx(i => (i+1) % LOAD_MSGS.length), 3000);
-    } else { clearInterval(timerRef.current); }
-    return () => clearInterval(timerRef.current);
-  }, [loading]);
+  async function handleBarcode(barcode) {
+    setError("");
+    setScreen("loading");
+    setLoadMsg(LOAD_MSGS[0]);
 
-  async function runSearch() {
-    setError(""); setRawDebug(""); setResults(null); setLoading(true);
+    let idx = 0;
+    loadTimerRef.current = setInterval(() => {
+      idx = (idx + 1) % LOAD_MSGS.length;
+      setLoadMsg(LOAD_MSGS[idx]);
+    }, 3000);
+
     try {
       const res = await fetch(PROXY_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ problem, emotion, count })
+        body: JSON.stringify({ barcode })
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
-      setRawDebug(data.debug || "");
+
       const parsed = extractJSON(data.jsonText || "");
-      if (!parsed || !Array.isArray(parsed) || parsed.length === 0) {
-        throw new Error("No historical parallels found. Try describing your situation differently.\n\n" + (data.jsonText||"").slice(0,200));
-      }
-      setResults(parsed);
-      setStep(5);
+      if (!parsed) throw new Error("Could not parse report. Try again.");
+
+      setReport(parsed);
+      setProduct(data.product || { name: "Unknown product", brand: "", imageUrl: null });
+      setScreen("results");
     } catch(e) {
       setError(e.message);
-      setStep(6);
-    } finally { setLoading(false); }
-  }
-
-  const next = () => setStep(s => s+1);
-  const back = () => setStep(s => s-1);
-  function restart() { setStep(0); setResults(null); setError(""); setRawDebug(""); }
-
-  if (loading) return (
-    <div className="shell">
-      <div className="top-bar"><div className="wordmark">Dead <em>Mentors</em></div></div>
-      <div className="load-wrap">
-        <div className="load-hourglass">⧗</div>
-        <div className="load-msg">{LOAD_MSGS[loadIdx]}</div>
-        <div className="load-sub">Searching centuries of letters and diaries</div>
-      </div>
-    </div>
-  );
-
-  function renderContent() {
-    if (step === 5 && results) return (
-      <div className="results-wrap">
-        <div className="results-head">
-          <div className="results-title">They've been here too.</div>
-          <div className="results-sub">{results.length} voices across history · {emotion.toLowerCase()}</div>
-        </div>
-        <div className="results-note">
-          These are not motivational quotes. They are the actual words — letters, diary entries, speeches — of people who sat with what you are sitting with now. Read slowly.
-        </div>
-        <div className="divider">· · ·</div>
-        {results.map((m,i) => <MentorCard key={i} mentor={m} idx={i} />)}
-        <button className="restart-btn" onClick={restart}>← Ask again</button>
-      </div>
-    );
-
-    if (step === 6) return (
-      <div className="step-wrap">
-        <div className="step-tag">Something went wrong</div>
-        <div className="step-q">The archives were quiet.</div>
-        <div className="err-box">
-          {error}
-          {rawDebug && <div className="err-raw">{rawDebug}</div>}
-        </div>
-        <div className="nav">
-          <button className="btn-go" onClick={()=>{ setError(""); setStep(2); }}>Try again</button>
-          <button className="btn-skip" onClick={restart}>Start over</button>
-        </div>
-      </div>
-    );
-
-    switch(step) {
-      case 0: return (
-        <div className="step-wrap">
-          <div className="step-tag">I</div>
-          <div className="step-q">What's weighing on you?</div>
-          <div className="step-hint">Describe it plainly. The more specific you are, the more precisely we can search the historical record.</div>
-          <textarea
-            className="textarea-field"
-            placeholder="e.g. I feel like everyone around me knows what they're doing and I don't. I'm halfway through college and still have no idea what I actually want."
-            value={problem}
-            onChange={e => setProblem(e.target.value)}
-            rows={4}
-            autoFocus
-          />
-          <div className="nav" style={{marginTop:24}}>
-            <button className="btn-go" onClick={next} disabled={!problem.trim()}>Continue</button>
-          </div>
-        </div>
-      );
-
-      case 1: return (
-        <div className="step-wrap">
-          <div className="step-tag">II</div>
-          <div className="step-q">How does it feel?</div>
-          <div className="step-hint">Choose the word that fits closest. This helps find the right emotional register in the historical record.</div>
-          <div className="chip-set">
-            {EMOTIONS.map(e => (
-              <button key={e} className={"chip"+(emotion===e?" on":"")} onClick={()=>setEmotion(e)}>{e}</button>
-            ))}
-          </div>
-          <div className="nav">
-            <button className="btn-back" onClick={back}>Back</button>
-            <button className="btn-go" onClick={next}>Continue</button>
-          </div>
-        </div>
-      );
-
-      case 2: return (
-        <div className="step-wrap">
-          <div className="step-tag">III</div>
-          <div className="step-q">How many voices?</div>
-          <div className="step-hint">Three is enough to sit with. Five if you want the full breadth.</div>
-          <div className="chip-set" style={{marginBottom:32}}>
-            {COUNTS.map(c => (
-              <button key={c} className={"chip"+(count===c?" on":"")} onClick={()=>setCount(c)}>{c} mentors</button>
-            ))}
-          </div>
-          <div style={{marginTop:8}}>
-            <div className="sum-line">Your situation: <strong>"{problem.slice(0,80)}{problem.length>80?"...":""}"</strong></div>
-            <div className="sum-line">Feeling: <strong>{emotion}</strong></div>
-          </div>
-          <div className="nav">
-            <button className="btn-back" onClick={back}>Back</button>
-            <button className="btn-go" onClick={()=>{ setStep(10); runSearch(); }}>Search the archives →</button>
-          </div>
-        </div>
-      );
-
-      default: return null;
+      setScreen("error");
+    } finally {
+      clearInterval(loadTimerRef.current);
     }
   }
+
+  function reset() { setScreen("scan"); setReport(null); setProduct(null); setError(""); }
 
   return (
     <div className="shell">
       <div className="top-bar">
-        <div className="wordmark">Dead <em>Mentors</em></div>
-        {step < 3 && <ProgressTrack current={step} total={TOTAL_STEPS} />}
+        <div className="wordmark">True<span>Label</span></div>
+        <div className="tagline">Honest food intel</div>
       </div>
-      {renderContent()}
+
+      {screen === "scan" && <ScanScreen onBarcode={handleBarcode} />}
+      {screen === "loading" && <LoadingScreen msg={loadMsg} />}
+      {screen === "results" && <ResultsScreen report={report} product={product} onReset={reset} />}
+      {screen === "error" && (
+        <div style={{flex:1}}>
+          <div className="err-box">{error}</div>
+          <button className="scan-again-btn" style={{marginTop:20}} onClick={reset}>← Try again</button>
+        </div>
+      )}
     </div>
   );
 }
