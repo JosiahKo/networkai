@@ -218,49 +218,62 @@ function extractJSON(raw) {
 }
 
 function ScanScreen({ onBarcode }) {
-  const videoRef = useRef(null);
-  const [scanning, setScanning] = useState(false);
-  const [cameraError, setCameraError] = useState(false);
   const [manualCode, setManualCode] = useState("");
-  const readerRef = useRef(null);
+  const [decoding, setDecoding] = useState(false);
+  const [decodeError, setDecodeError] = useState("");
+  const fileInputRef = useRef(null);
+  const canvasRef = useRef(null);
 
-  async function startScanner() {
-    if (!window.ZXing) { setCameraError(true); return; }
+  // Decode barcode from an image file using ZXing
+  async function decodeImageFile(file) {
+    setDecoding(true);
+    setDecodeError("");
     try {
-      const hints = new Map();
-      const formats = [
-        window.ZXing.BarcodeFormat.EAN_13,
-        window.ZXing.BarcodeFormat.EAN_8,
-        window.ZXing.BarcodeFormat.UPC_A,
-        window.ZXing.BarcodeFormat.UPC_E,
-        window.ZXing.BarcodeFormat.CODE_128,
-      ];
-      hints.set(window.ZXing.DecodeHintType.POSSIBLE_FORMATS, formats);
-      const reader = new window.ZXing.BrowserMultiFormatReader(hints);
-      readerRef.current = reader;
-      setScanning(true);
-      const devices = await window.ZXing.BrowserCodeReader.listVideoInputDevices();
-      const deviceId = devices.length > 1 ? devices[devices.length - 1].deviceId : undefined;
-      reader.decodeFromVideoDevice(deviceId, videoRef.current, (result, err) => {
-        if (result) {
-          reader.reset();
-          setScanning(false);
-          onBarcode(result.getText());
+      const imgUrl = URL.createObjectURL(file);
+      if (window.ZXing) {
+        const hints = new Map();
+        const formats = [
+          window.ZXing.BarcodeFormat.EAN_13,
+          window.ZXing.BarcodeFormat.EAN_8,
+          window.ZXing.BarcodeFormat.UPC_A,
+          window.ZXing.BarcodeFormat.UPC_E,
+          window.ZXing.BarcodeFormat.CODE_128,
+          window.ZXing.BarcodeFormat.CODE_39,
+        ];
+        hints.set(window.ZXing.DecodeHintType.POSSIBLE_FORMATS, formats);
+        const reader = new window.ZXing.BrowserMultiFormatReader(hints);
+        const result = await reader.decodeFromImageUrl(imgUrl);
+        URL.revokeObjectURL(imgUrl);
+        onBarcode(result.getText());
+      } else {
+        // Fallback: try native BarcodeDetector API (Chrome on Android)
+        if ("BarcodeDetector" in window) {
+          const detector = new BarcodeDetector({ formats: ["ean_13","ean_8","upc_a","upc_e","code_128","code_39"] });
+          const img = new Image();
+          img.src = imgUrl;
+          await new Promise(r => img.onload = r);
+          const barcodes = await detector.detect(img);
+          URL.revokeObjectURL(imgUrl);
+          if (barcodes.length > 0) {
+            onBarcode(barcodes[0].rawValue);
+          } else {
+            setDecodeError("No barcode found in image. Try a clearer photo with good lighting.");
+          }
+        } else {
+          setDecodeError("Barcode library not loaded. Please enter the number manually below.");
         }
-      });
+      }
     } catch(e) {
-      setCameraError(true);
-      setScanning(false);
+      setDecodeError("Could not read barcode. Try again with better lighting, or enter the number manually.");
+    } finally {
+      setDecoding(false);
     }
   }
 
-  useEffect(() => {
-    return () => { if (readerRef.current) readerRef.current.reset(); };
-  }, []);
-
-  function stopScanner() {
-    if (readerRef.current) readerRef.current.reset();
-    setScanning(false);
+  function handleFileChange(e) {
+    const file = e.target.files && e.target.files[0];
+    if (file) decodeImageFile(file);
+    e.target.value = "";
   }
 
   function submitManual() {
@@ -275,43 +288,49 @@ function ScanScreen({ onBarcode }) {
         <div className="scan-hint">Scan any food barcode for recalls, lawsuits, ingredient concerns, and the honest story behind the label.</div>
       </div>
 
-      {scanning ? (
-        <>
-          <div className="viewfinder-wrap">
-            <video ref={videoRef} muted playsInline />
-            <canvas />
-            <div className="scan-line" />
-            <div className="corner corner-tl" />
-            <div className="corner corner-tr" />
-            <div className="corner corner-bl" />
-            <div className="corner corner-br" />
-            <div className="scan-status">Scanning...</div>
-          </div>
-          <button className="btn-secondary" style={{maxWidth:360,margin:"0 auto"}} onClick={stopScanner}>Cancel</button>
-        </>
-      ) : (
-        <>
-          <button className="btn-primary" onClick={startScanner} disabled={cameraError}>
-            {cameraError ? "Camera unavailable" : "Scan barcode"}
-          </button>
+      {/* Hidden file input — triggers native camera on mobile */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        style={{display:"none"}}
+        onChange={handleFileChange}
+      />
 
-          <div className="manual-wrap">
-            <div className="manual-label">Or enter barcode manually</div>
-            <div className="manual-row">
-              <input
-                className="manual-input"
-                placeholder="e.g. 016000275287"
-                value={manualCode}
-                onChange={e => setManualCode(e.target.value.replace(/\D/g,""))}
-                onKeyDown={e => e.key === "Enter" && submitManual()}
-                maxLength={14}
-                inputMode="numeric"
-              />
-              <button className="manual-btn" onClick={submitManual} disabled={manualCode.length < 8}>Go</button>
-            </div>
-          </div>
-        </>
+      <button
+        className="btn-primary"
+        onClick={() => fileInputRef.current && fileInputRef.current.click()}
+        disabled={decoding}
+        style={{maxWidth:360,margin:"0 auto"}}
+      >
+        {decoding ? "Reading barcode..." : "📷  Scan barcode"}
+      </button>
+
+      {decodeError && (
+        <div style={{maxWidth:360,margin:"12px auto 0",fontSize:13,color:"#ff8888",textAlign:"center",lineHeight:1.6}}>
+          {decodeError}
+        </div>
       )}
+
+      <div className="manual-wrap">
+        <div className="manual-label">Or enter barcode number manually</div>
+        <div className="manual-row">
+          <input
+            className="manual-input"
+            placeholder="e.g. 016000275287"
+            value={manualCode}
+            onChange={e => setManualCode(e.target.value.replace(/\D/g,""))}
+            onKeyDown={e => e.key === "Enter" && submitManual()}
+            maxLength={14}
+            inputMode="numeric"
+          />
+          <button className="manual-btn" onClick={submitManual} disabled={manualCode.length < 8}>Go</button>
+        </div>
+        <div style={{fontSize:11,color:"var(--text3)",marginTop:8,textAlign:"left"}}>
+          The barcode number is printed below the barcode lines on the packaging.
+        </div>
+      </div>
     </div>
   );
 }
