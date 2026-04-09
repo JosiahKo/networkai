@@ -2,375 +2,466 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>The Edge</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>TrueLabel</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#080808;
-  --surface:#0f0f0f;
-  --surface2:#161616;
-  --border:#1e1e1e;
-  --border2:#2a2a2a;
-  --text:#e8e8e8;
-  --text2:#666;
-  --text3:#3a3a3a;
-  --accent:#e8ff47;
-  --accent2:#c8e000;
-  --red:#ff4444;
+  --bg:#0a0a0a;
+  --surface:#111;
+  --surface2:#1a1a1a;
+  --border:#222;
+  --border2:#2e2e2e;
+  --text:#f0f0f0;
+  --text2:#888;
+  --text3:#555;
   --green:#00d084;
-  --blue:#4d9fff;
-  --orange:#ff8c42;
+  --green-bg:#001a0f;
+  --amber:#f5a623;
+  --amber-bg:#1a1000;
+  --red:#ff4444;
+  --red-bg:#1a0000;
+  --blue:#4da6ff;
 }
 html,body{background:var(--bg);min-height:100vh;}
-body{font-family:'Syne',sans-serif;color:var(--text);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+body{font-family:'Space Grotesk',sans-serif;color:var(--text);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;}
 
-.shell{max-width:680px;margin:0 auto;padding:0 24px 80px;}
+.shell{max-width:540px;margin:0 auto;padding:0 20px 80px;min-height:100vh;display:flex;flex-direction:column;}
 
 /* Header */
-.header{padding:32px 0 28px;border-bottom:1px solid var(--border);margin-bottom:40px;}
-.logo-row{display:flex;align-items:baseline;gap:12px;margin-bottom:6px;}
-.logo{font-size:28px;font-weight:800;letter-spacing:-0.04em;color:var(--text);}
-.logo span{color:var(--accent);}
-.logo-tag{font-family:'DM Mono',monospace;font-size:11px;color:var(--text2);letter-spacing:0.08em;text-transform:uppercase;}
-.header-sub{font-size:13px;color:var(--text2);line-height:1.7;max-width:480px;}
-.header-sub strong{color:var(--text);font-weight:500;}
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:28px 0 24px;border-bottom:1px solid var(--border);margin-bottom:36px;flex-shrink:0;}
+.wordmark{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;letter-spacing:0.02em;color:var(--text);}
+.wordmark span{color:var(--green);}
+.tagline{font-size:11px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;}
 
-/* Input area */
-.input-section{margin-bottom:32px;}
-.input-label{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);margin-bottom:10px;display:block;}
-.topic-input{
-  width:100%;background:var(--surface);border:1px solid var(--border2);
-  color:var(--text);font-family:'Syne',sans-serif;font-size:17px;font-weight:500;
-  padding:14px 16px;outline:none;transition:border-color 0.2s;
-  letter-spacing:-0.01em;
-}
-.topic-input::placeholder{color:var(--text3);}
-.topic-input:focus{border-color:var(--accent);}
+/* Scanner area */
+.scan-wrap{flex:1;display:flex;flex-direction:column;align-items:center;}
+.scan-hero{text-align:center;margin-bottom:36px;width:100%;}
+.scan-title{font-size:28px;font-weight:700;letter-spacing:-0.02em;margin-bottom:8px;}
+.scan-hint{font-size:14px;color:var(--text2);line-height:1.6;}
 
-/* Angle selector */
-.angles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin:16px 0 24px;}
-.angle-btn{
-  padding:10px 14px;background:var(--surface);border:1px solid var(--border2);
-  color:var(--text2);font-family:'Syne',sans-serif;font-size:12px;font-weight:500;
-  cursor:pointer;transition:all 0.15s;text-align:left;letter-spacing:0.01em;
+/* Camera viewfinder */
+.viewfinder-wrap{
+  width:100%;max-width:360px;margin:0 auto 28px;
+  position:relative;background:#000;
+  border:1px solid var(--border2);overflow:hidden;
+  border-radius:4px;
 }
-.angle-btn:hover{border-color:var(--border2);color:var(--text);background:var(--surface2);}
-.angle-btn.on{border-color:var(--accent);color:var(--accent);background:#0f1200;}
-.angle-icon{display:block;font-size:16px;margin-bottom:4px;}
-.angle-name{display:block;font-size:12px;font-weight:600;}
-.angle-desc{display:block;font-size:11px;color:var(--text2);margin-top:2px;font-weight:400;}
-.angle-btn.on .angle-desc{color:#8a9600;}
+.viewfinder-wrap video{width:100%;display:block;aspect-ratio:4/3;object-fit:cover;}
+.viewfinder-wrap canvas{position:absolute;top:0;left:0;width:100%;height:100%;}
+.scan-line{
+  position:absolute;left:10%;right:10%;height:2px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);
+  animation:scanline 2s ease-in-out infinite;
+  box-shadow:0 0 8px var(--green);
+}
+@keyframes scanline{0%{top:20%;}50%{top:75%;}100%{top:20%;}}
+.corner{position:absolute;width:20px;height:20px;}
+.corner-tl{top:8px;left:8px;border-top:2px solid var(--green);border-left:2px solid var(--green);}
+.corner-tr{top:8px;right:8px;border-top:2px solid var(--green);border-right:2px solid var(--green);}
+.corner-bl{bottom:8px;left:8px;border-bottom:2px solid var(--green);border-left:2px solid var(--green);}
+.corner-br{bottom:8px;right:8px;border-bottom:2px solid var(--green);border-right:2px solid var(--green);}
+.scan-status{
+  position:absolute;bottom:10px;left:0;right:0;text-align:center;
+  font-family:'Space Mono',monospace;font-size:10px;color:var(--green);
+  letter-spacing:0.1em;text-transform:uppercase;
+}
 
-/* CTA */
-.cta-row{display:flex;gap:10px;align-items:center;}
-.btn-run{
-  padding:13px 28px;background:var(--accent);color:#000;border:none;
-  font-family:'Syne',sans-serif;font-size:13px;font-weight:700;
-  cursor:pointer;transition:all 0.15s;letter-spacing:0.04em;text-transform:uppercase;
+/* Buttons */
+.btn-primary{
+  width:100%;max-width:360px;padding:14px;
+  background:var(--green);color:#000;border:none;
+  font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;
+  cursor:pointer;letter-spacing:0.05em;text-transform:uppercase;
+  transition:opacity 0.15s;border-radius:3px;
 }
-.btn-run:hover{background:var(--accent2);}
-.btn-run:disabled{opacity:0.3;cursor:not-allowed;background:var(--text2);}
-.btn-clear{
-  padding:13px 18px;background:transparent;color:var(--text2);
-  border:1px solid var(--border2);font-family:'Syne',sans-serif;
-  font-size:12px;font-weight:500;cursor:pointer;transition:all 0.15s;
+.btn-primary:hover{opacity:0.88;}
+.btn-primary:disabled{opacity:0.3;cursor:not-allowed;}
+.btn-secondary{
+  width:100%;max-width:360px;padding:12px;margin-top:10px;
+  background:transparent;color:var(--text2);
+  border:1px solid var(--border2);
+  font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:500;
+  cursor:pointer;letter-spacing:0.04em;transition:all 0.15s;border-radius:3px;
 }
-.btn-clear:hover{border-color:var(--border2);color:var(--text);}
+.btn-secondary:hover{border-color:var(--text3);color:var(--text);}
 
-/* Quick topics */
-.quick-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--text2);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;}
-.quick-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:24px;}
-.quick-btn{
-  padding:6px 14px;background:transparent;border:1px solid var(--border);
-  color:var(--text2);font-family:'DM Mono',monospace;font-size:11px;
-  cursor:pointer;transition:all 0.15s;letter-spacing:0.03em;
+/* Manual input */
+.manual-wrap{width:100%;max-width:360px;margin:20px auto 0;text-align:center;}
+.manual-label{font-size:11px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;}
+.manual-row{display:flex;gap:8px;}
+.manual-input{
+  flex:1;background:var(--surface);border:1px solid var(--border2);
+  color:var(--text);font-family:'Space Mono',monospace;font-size:14px;
+  padding:10px 12px;outline:none;transition:border-color 0.2s;border-radius:3px;
 }
-.quick-btn:hover{border-color:var(--border2);color:var(--text);}
+.manual-input::placeholder{color:var(--text3);}
+.manual-input:focus{border-color:var(--green);}
+.manual-btn{
+  padding:10px 16px;background:var(--surface2);color:var(--text);
+  border:1px solid var(--border2);font-family:'Space Grotesk',sans-serif;
+  font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s;border-radius:3px;
+}
+.manual-btn:hover{border-color:var(--green);color:var(--green);}
 
 /* Loading */
-.load-wrap{padding:60px 0;text-align:center;}
-.load-ring{width:32px;height:32px;border:1px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 24px;}
+.load-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 0;}
+.load-ring{width:40px;height:40px;border:2px solid var(--border2);border-top-color:var(--green);border-radius:50%;animation:spin 0.9s linear infinite;margin-bottom:24px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.load-msg{font-family:'DM Mono',monospace;font-size:13px;color:var(--text2);letter-spacing:0.04em;}
-.load-ticker{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);margin-top:8px;letter-spacing:0.03em;}
+.load-msg{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px;}
+.load-sub{font-size:12px;color:var(--text2);font-family:'Space Mono',monospace;}
 
 /* Results */
-.results-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;}
-.results-title{font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text2);}
-.results-meta{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);}
-.results-topic{font-size:22px;font-weight:700;letter-spacing:-0.02em;margin-bottom:24px;color:var(--text);}
-.results-topic span{color:var(--accent);}
+.results-wrap{flex:1;width:100%;}
 
-/* Signal card */
-.signal-card{
-  background:var(--surface);border:1px solid var(--border);
-  padding:22px 22px 18px;margin-bottom:10px;
-  position:relative;overflow:hidden;
-  transition:border-color 0.2s;
+.product-header{display:flex;gap:14px;align-items:flex-start;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border);}
+.product-img{width:64px;height:64px;object-fit:contain;background:var(--surface);border:1px solid var(--border2);border-radius:4px;flex-shrink:0;}
+.product-img-placeholder{width:64px;height:64px;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px;}
+.product-name{font-size:18px;font-weight:700;margin-bottom:2px;letter-spacing:-0.01em;}
+.product-brand{font-size:13px;color:var(--text2);}
+
+/* Verdict banner */
+.verdict-banner{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 16px;border-radius:4px;margin-bottom:20px;
 }
-.signal-card:hover{border-color:var(--border2);}
-.signal-card::before{
-  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+.verdict-banner.clean{background:var(--green-bg);border:1px solid #00401a;}
+.verdict-banner.caution{background:var(--amber-bg);border:1px solid #3a2800;}
+.verdict-banner.warning{background:var(--red-bg);border:1px solid #400000;}
+.verdict-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.verdict-banner.clean .verdict-dot{background:var(--green);}
+.verdict-banner.caution .verdict-dot{background:var(--amber);}
+.verdict-banner.warning .verdict-dot{background:var(--red);}
+.verdict-text{font-size:14px;font-weight:600;}
+.verdict-banner.clean .verdict-text{color:var(--green);}
+.verdict-banner.caution .verdict-text{color:var(--amber);}
+.verdict-banner.warning .verdict-text{color:var(--red);}
+
+/* Key facts row */
+.facts-row{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.fact-pill{
+  padding:5px 12px;background:var(--surface2);
+  border:1px solid var(--border2);border-radius:20px;
+  font-size:12px;font-family:'Space Mono',monospace;color:var(--text2);
 }
-.signal-card.money::before{background:var(--green);}
-.signal-card.jobs::before{background:var(--blue);}
-.signal-card.markets::before{background:var(--accent);}
-.signal-card.politics::before{background:var(--red);}
-.signal-card.tech::before{background:var(--orange);}
-.signal-card.health::before{background:#c084fc;}
-.signal-card.supply-chain::before,.signal-card["supply chain"]::before{background:var(--orange);}
+.fact-pill strong{color:var(--text);font-weight:700;}
 
-.signal-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px;}
-.signal-headline{font-size:16px;font-weight:700;letter-spacing:-0.01em;line-height:1.3;flex:1;}
-.signal-badges{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;}
-.cat-badge{
-  font-family:'DM Mono',monospace;font-size:9px;font-weight:500;
-  letter-spacing:0.1em;text-transform:uppercase;
-  padding:3px 8px;border-radius:2px;
+/* Section cards */
+.section-card{background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:16px 18px;margin-bottom:10px;}
+.section-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.section-status{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.section-status.clean{background:var(--green);}
+.section-status.caution{background:var(--amber);}
+.section-status.warning{background:var(--red);}
+.section-title{font-size:12px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);}
+.section-body{font-size:13px;color:var(--text);line-height:1.7;}
+.section-source{margin-top:8px;}
+.section-source a{font-size:11px;color:var(--blue);text-decoration:none;letter-spacing:0.03em;}
+.section-source a:hover{text-decoration:underline;}
+
+/* Bottom line */
+.bottom-line{margin-top:20px;padding:18px;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;}
+.bottom-line-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;}
+.bottom-line-text{font-size:14px;color:var(--text);line-height:1.75;}
+
+.scan-again-btn{
+  margin-top:24px;width:100%;padding:12px;
+  background:transparent;color:var(--text2);
+  border:1px solid var(--border2);
+  font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;
+  cursor:pointer;letter-spacing:0.05em;text-transform:uppercase;
+  transition:all 0.15s;border-radius:3px;
 }
-.cat-badge.money{background:#001a0f;color:var(--green);border:1px solid #003020;}
-.cat-badge.jobs{background:#001020;color:var(--blue);border:1px solid #002040;}
-.cat-badge.markets{background:#0f1200;color:var(--accent);border:1px solid #1e2400;}
-.cat-badge.politics{background:#1a0000;color:var(--red);border:1px solid #330000;}
-.cat-badge.tech{background:#1a0800;color:var(--orange);border:1px solid #331000;}
-.cat-badge.health{background:#130020;color:#c084fc;border:1px solid #280040;}
-.urgency-dot{width:7px;height:7px;border-radius:50%;margin-top:4px;align-self:center;}
-.urgency-dot.high{background:var(--red);}
-.urgency-dot.medium{background:var(--accent);}
-.urgency-dot.low{background:var(--text3);}
+.scan-again-btn:hover{border-color:var(--green);color:var(--green);}
 
-.signal-body{font-size:14px;color:var(--text);line-height:1.75;margin-bottom:12px;}
+/* Error */
+.err-box{background:var(--red-bg);border:1px solid #400000;border-radius:4px;padding:16px;font-size:13px;color:#ff8888;line-height:1.7;margin-top:20px;}
 
-.vs-narrative{
-  font-size:12px;font-style:italic;color:var(--text2);
-  padding:9px 12px;background:var(--surface2);
-  border-left:2px solid var(--border2);margin-bottom:12px;line-height:1.6;
-}
-
-.why-matters{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:12px;}
-.why-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;}
-
-.signal-footer{display:flex;align-items:center;justify-content:space-between;}
-.source-link{font-family:'DM Mono',monospace;font-size:11px;color:var(--text2);text-decoration:none;letter-spacing:0.03em;border-bottom:1px solid var(--border2);padding-bottom:1px;transition:all 0.15s;}
-.source-link:hover{color:var(--text);border-color:var(--text2);}
-
-/* Disclaimer */
-.disclaimer{margin-top:28px;padding:14px 16px;background:var(--surface);border:1px solid var(--border);font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);line-height:1.7;letter-spacing:0.02em;}
-
-.err-box{background:#1a0000;border:1px solid #330000;padding:16px;font-size:13px;color:#ff8888;line-height:1.7;margin-top:16px;}
-
-@media(max-width:500px){.angles{grid-template-columns:1fr 1fr;}.logo{font-size:24px;}}
+@media(max-width:400px){.scan-title{font-size:24px;}}
 </style>
 </head>
 <body>
-<div class="shell">
-  <div id="root"></div>
-</div>
+<div id="root"></div>
+
+<!-- ZXing barcode scanner library -->
+<script src="https://unpkg.com/@zxing/library@0.21.3/umd/index.min.js"></script>
 <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script>
+  // ── CLOUDFLARE WORKER URL ────────────────────────────────────
   const PROXY_URL = "https://polished-dust-8e7a.josiahkondo.workers.dev";
+  // ────────────────────────────────────────────────────────────
 </script>
 <script type="text/babel">
-const { useState, useRef, useEffect } = React;
-
-const ANGLES = [
-  { id:"follow the money",      icon:"💸", name:"Follow the money",      desc:"Donations, lobbying, insider trades" },
-  { id:"jobs tell the truth",   icon:"📊", name:"Jobs tell the truth",    desc:"Hiring & layoff signals" },
-  { id:"what smart money sees", icon:"🛰", name:"What smart money sees",  desc:"Shipping, foot traffic, freight" },
-  { id:"before the news",       icon:"🔬", name:"Before the news",        desc:"Patents, FDA, gov contracts" },
-  { id:"what they're not saying",icon:"👁", name:"What they're not saying",desc:"Earnings tone, short interest" },
-];
-
-const QUICK_TOPICS = [
-  "AI industry", "US housing market", "China economy", "Tech layoffs",
-  "Healthcare costs", "Electric vehicles", "Commercial real estate",
-  "US consumer spending", "Defense spending", "College enrollment",
-];
+const { useState, useEffect, useRef } = React;
 
 const LOAD_MSGS = [
-  "Scanning non-obvious data sources...",
-  "Cross-referencing public filings...",
-  "Finding what most people miss...",
-  "Synthesizing the signal...",
-  "Almost there...",
+  "Looking up product...",
+  "Checking FDA recall database...",
+  "Searching for lawsuits...",
+  "Analyzing ingredients...",
+  "Writing your report...",
 ];
 
-const CATEGORY_COLORS = {
-  money:"money", jobs:"jobs", markets:"markets",
-  politics:"politics", tech:"tech", health:"health",
-  "supply chain":"supply-chain",
-};
+const STATUS_COLORS = { clean: "#00d084", caution: "#f5a623", warning: "#ff4444" };
 
 function extractJSON(raw) {
   try { return JSON.parse(raw.trim()); } catch(_) {}
   const t = raw.replace(/```json\s*/gi,"").replace(/```\s*/g,"").trim();
   try { return JSON.parse(t); } catch(_) {}
-  const s = t.indexOf("["), e = t.lastIndexOf("]");
+  const s = t.indexOf("{"), e = t.lastIndexOf("}");
   if (s !== -1 && e > s) { try { return JSON.parse(t.slice(s,e+1)); } catch(_) {} }
   return null;
 }
 
-function SignalCard({ signal }) {
-  const cat = (signal.category || "markets").toLowerCase().replace(" ","_");
-  const catClass = CATEGORY_COLORS[signal.category?.toLowerCase()] || "markets";
+function ScanScreen({ onBarcode }) {
+  const [manualCode, setManualCode] = useState("");
+  const [decoding, setDecoding] = useState(false);
+  const [decodeError, setDecodeError] = useState("");
+  const fileInputRef = useRef(null);
+  const canvasRef = useRef(null);
+
+  // Decode barcode from an image file using ZXing
+  async function decodeImageFile(file) {
+    setDecoding(true);
+    setDecodeError("");
+    try {
+      const imgUrl = URL.createObjectURL(file);
+      if (window.ZXing) {
+        const hints = new Map();
+        const formats = [
+          window.ZXing.BarcodeFormat.EAN_13,
+          window.ZXing.BarcodeFormat.EAN_8,
+          window.ZXing.BarcodeFormat.UPC_A,
+          window.ZXing.BarcodeFormat.UPC_E,
+          window.ZXing.BarcodeFormat.CODE_128,
+          window.ZXing.BarcodeFormat.CODE_39,
+        ];
+        hints.set(window.ZXing.DecodeHintType.POSSIBLE_FORMATS, formats);
+        const reader = new window.ZXing.BrowserMultiFormatReader(hints);
+        const result = await reader.decodeFromImageUrl(imgUrl);
+        URL.revokeObjectURL(imgUrl);
+        onBarcode(result.getText());
+      } else {
+        // Fallback: try native BarcodeDetector API (Chrome on Android)
+        if ("BarcodeDetector" in window) {
+          const detector = new BarcodeDetector({ formats: ["ean_13","ean_8","upc_a","upc_e","code_128","code_39"] });
+          const img = new Image();
+          img.src = imgUrl;
+          await new Promise(r => img.onload = r);
+          const barcodes = await detector.detect(img);
+          URL.revokeObjectURL(imgUrl);
+          if (barcodes.length > 0) {
+            onBarcode(barcodes[0].rawValue);
+          } else {
+            setDecodeError("No barcode found in image. Try a clearer photo with good lighting.");
+          }
+        } else {
+          setDecodeError("Barcode library not loaded. Please enter the number manually below.");
+        }
+      }
+    } catch(e) {
+      setDecodeError("Could not read barcode. Try again with better lighting, or enter the number manually.");
+    } finally {
+      setDecoding(false);
+    }
+  }
+
+  function handleFileChange(e) {
+    const file = e.target.files && e.target.files[0];
+    if (file) decodeImageFile(file);
+    e.target.value = "";
+  }
+
+  function submitManual() {
+    const code = manualCode.trim();
+    if (code.length >= 8) onBarcode(code);
+  }
+
   return (
-    <div className={"signal-card " + catClass}>
-      <div className="signal-top">
-        <div className="signal-headline">{signal.headline}</div>
-        <div className="signal-badges">
-          <span className={"cat-badge " + catClass}>{signal.category || "signal"}</span>
-          <div className={"urgency-dot " + (signal.urgency || "medium")} title={"Urgency: " + signal.urgency} />
-        </div>
+    <div className="scan-wrap">
+      <div className="scan-hero">
+        <div className="scan-title">What's really in it?</div>
+        <div className="scan-hint">Scan any food barcode for recalls, lawsuits, ingredient concerns, and the honest story behind the label.</div>
       </div>
 
-      <div className="signal-body">{signal.signal}</div>
+      {/* Hidden file input — triggers native camera on mobile */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        style={{display:"none"}}
+        onChange={handleFileChange}
+      />
 
-      {signal.vsNarrative && (
-        <div className="vs-narrative">{signal.vsNarrative}</div>
+      <button
+        className="btn-primary"
+        onClick={() => fileInputRef.current && fileInputRef.current.click()}
+        disabled={decoding}
+        style={{maxWidth:360,margin:"0 auto"}}
+      >
+        {decoding ? "Reading barcode..." : "📷  Scan barcode"}
+      </button>
+
+      {decodeError && (
+        <div style={{maxWidth:360,margin:"12px auto 0",fontSize:13,color:"#ff8888",textAlign:"center",lineHeight:1.6}}>
+          {decodeError}
+        </div>
       )}
 
-      <div className="why-label">Why it matters</div>
-      <div className="why-matters">{signal.whyItMatters}</div>
-
-      <div className="signal-footer">
-        {signal.sourceUrl && signal.sourceUrl !== "null" ? (
-          <a className="source-link" href={signal.sourceUrl} target="_blank" rel="noopener noreferrer">
-            ↗ {signal.sourceLabel || "Source"}
-          </a>
-        ) : signal.sourceLabel ? (
-          <span style={{fontFamily:"'DM Mono',monospace",fontSize:11,color:"var(--text3)",letterSpacing:"0.03em"}}>{signal.sourceLabel}</span>
-        ) : <span/>}
+      <div className="manual-wrap">
+        <div className="manual-label">Or enter barcode number manually</div>
+        <div className="manual-row">
+          <input
+            className="manual-input"
+            placeholder="e.g. 016000275287"
+            value={manualCode}
+            onChange={e => setManualCode(e.target.value.replace(/\D/g,""))}
+            onKeyDown={e => e.key === "Enter" && submitManual()}
+            maxLength={14}
+            inputMode="numeric"
+          />
+          <button className="manual-btn" onClick={submitManual} disabled={manualCode.length < 8}>Go</button>
+        </div>
+        <div style={{fontSize:11,color:"var(--text3)",marginTop:8,textAlign:"left"}}>
+          The barcode number is printed below the barcode lines on the packaging.
+        </div>
       </div>
     </div>
   );
 }
 
-function App() {
-  const [topic, setTopic] = useState("");
-  const [angle, setAngle] = useState("follow the money");
-  const [loading, setLoading] = useState(false);
-  const [loadMsg, setLoadMsg] = useState(LOAD_MSGS[0]);
-  const [results, setResults] = useState(null);
-  const [resultMeta, setResultMeta] = useState(null);
-  const [error, setError] = useState("");
-  const timerRef = useRef(null);
+function LoadingScreen({ msg }) {
+  return (
+    <div className="load-wrap">
+      <div className="load-ring" />
+      <div className="load-msg">{msg}</div>
+      <div className="load-sub">Checking public records</div>
+    </div>
+  );
+}
 
-  async function run(t, a) {
-    const useTopic = t || topic;
-    const useAngle = a || angle;
-    if (!useTopic.trim()) return;
-    setError(""); setResults(null); setLoading(true); setLoadMsg(LOAD_MSGS[0]);
-    let i = 0;
-    timerRef.current = setInterval(() => {
-      i = Math.min(i+1, LOAD_MSGS.length-1);
-      setLoadMsg(LOAD_MSGS[i]);
-    }, 4000);
-    try {
-      const res = await fetch(PROXY_URL, {
-        method:"POST", headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({ topic: useTopic, angle: useAngle })
-      });
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
-      const parsed = extractJSON(data.jsonText || "");
-      if (!parsed || !Array.isArray(parsed) || parsed.length === 0)
-        throw new Error("No signals found for this topic. Try a different angle or broader topic.");
-      setResults(parsed);
-      setResultMeta({ topic: data.topic, angle: data.angle });
-    } catch(e) {
-      setError(e.message);
-    } finally {
-      clearInterval(timerRef.current);
-      setLoading(false);
-    }
-  }
-
-  function reset() { setResults(null); setResultMeta(null); setError(""); }
-
-  const currentAngle = ANGLES.find(a => a.id === angle);
+function ResultsScreen({ report, product, onReset }) {
+  if (!report) return null;
+  const verdict = report.overallVerdict || "caution";
 
   return (
-    <div>
-      <div className="header">
-        <div className="logo-row">
-          <div className="logo">The<span> Edge</span></div>
-          <div className="logo-tag">public signal intelligence</div>
-        </div>
-        <div className="header-sub">
-          What <strong>sophisticated people</strong> actually track — shipping data, lobbying filings, job posting trends, patent activity, insider trades. All public. All ignored by most people. <strong>Synthesized in seconds.</strong>
-        </div>
-      </div>
-
-      {/* Input always visible */}
-      <div className="input-section">
-        <label className="input-label">What do you want the edge on?</label>
-        <input
-          className="topic-input"
-          placeholder="e.g. AI industry, US housing, China economy, Tesla..."
-          value={topic}
-          onChange={e => setTopic(e.target.value)}
-          onKeyDown={e => e.key === "Enter" && run()}
-        />
-
-        <div className="quick-label" style={{marginTop:14}}>Quick topics</div>
-        <div className="quick-row">
-          {QUICK_TOPICS.map(t => (
-            <button key={t} className="quick-btn" onClick={() => { setTopic(t); run(t, angle); }}>{t}</button>
-          ))}
-        </div>
-
-        <label className="input-label">Lens</label>
-        <div className="angles">
-          {ANGLES.map(a => (
-            <button key={a.id} className={"angle-btn" + (angle===a.id?" on":"")} onClick={() => setAngle(a.id)}>
-              <span className="angle-icon">{a.icon}</span>
-              <span className="angle-name">{a.name}</span>
-              <span className="angle-desc">{a.desc}</span>
-            </button>
-          ))}
-        </div>
-
-        <div className="cta-row">
-          <button className="btn-run" onClick={() => run()} disabled={!topic.trim() || loading}>
-            {loading ? "Scanning..." : "Get the edge →"}
-          </button>
-          {(results || error) && <button className="btn-clear" onClick={reset}>Clear</button>}
+    <div className="results-wrap">
+      <div className="product-header">
+        {product.imageUrl
+          ? <img className="product-img" src={product.imageUrl} alt={product.name} onError={e => e.target.style.display="none"} />
+          : <div className="product-img-placeholder">🏷</div>
+        }
+        <div>
+          <div className="product-name">{product.name}</div>
+          <div className="product-brand">{product.brand}</div>
         </div>
       </div>
 
-      {/* Loading */}
-      {loading && (
-        <div className="load-wrap">
-          <div className="load-ring" />
-          <div className="load-msg">{loadMsg}</div>
-          <div className="load-ticker">Checking public filings, data feeds, and non-obvious sources</div>
+      <div className={"verdict-banner " + verdict}>
+        <div className="verdict-dot" />
+        <div className="verdict-text">{report.verdictReason || verdict.toUpperCase()}</div>
+      </div>
+
+      {report.keyFacts && report.keyFacts.length > 0 && (
+        <div className="facts-row">
+          {report.keyFacts.map((f,i) => (
+            <div key={i} className="fact-pill"><strong>{f.label}:</strong> {f.value}</div>
+          ))}
         </div>
       )}
 
-      {/* Error */}
-      {error && !loading && <div className="err-box">{error}</div>}
+      {report.sections && report.sections.map((s,i) => (
+        <div key={i} className="section-card">
+          <div className="section-top">
+            <div className={"section-status " + (s.status||"clean")} />
+            <div className="section-title">{s.title}</div>
+          </div>
+          <div className="section-body">{s.summary}</div>
+          {s.sourceUrl && s.sourceUrl !== "null" && (
+            <div className="section-source">
+              <a href={s.sourceUrl} target="_blank" rel="noopener noreferrer">
+                Source: {s.sourceLabel || s.sourceUrl} ↗
+              </a>
+            </div>
+          )}
+        </div>
+      ))}
 
-      {/* Results */}
-      {results && !loading && (
-        <div>
-          <div className="results-header">
-            <div className="results-title">Signals</div>
-            <div className="results-meta">{results.length} found · {currentAngle?.name}</div>
-          </div>
-          <div className="results-topic">
-            {resultMeta?.topic} <span>·</span>
-          </div>
-          {results.map((s,i) => <SignalCard key={i} signal={s} />)}
-          <div className="disclaimer">
-            ⚠ These signals are synthesized from public sources and are for informational purposes only.
-            Nothing here is financial or investment advice. Always verify before acting.
-            Sources linked where available.
-          </div>
+      {report.bottomLine && (
+        <div className="bottom-line">
+          <div className="bottom-line-label">Bottom line</div>
+          <div className="bottom-line-text">{report.bottomLine}</div>
+        </div>
+      )}
+
+      <button className="scan-again-btn" onClick={onReset}>← Scan another product</button>
+    </div>
+  );
+}
+
+function App() {
+  const [screen, setScreen] = useState("scan");
+  const [loadMsg, setLoadMsg] = useState(LOAD_MSGS[0]);
+  const [report, setReport] = useState(null);
+  const [product, setProduct] = useState(null);
+  const [error, setError] = useState("");
+  const loadTimerRef = useRef(null);
+
+  async function handleBarcode(barcode) {
+    setError("");
+    setScreen("loading");
+    setLoadMsg(LOAD_MSGS[0]);
+
+    let idx = 0;
+    loadTimerRef.current = setInterval(() => {
+      idx = (idx + 1) % LOAD_MSGS.length;
+      setLoadMsg(LOAD_MSGS[idx]);
+    }, 3000);
+
+    try {
+      const res = await fetch(PROXY_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ barcode })
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+
+      const parsed = extractJSON(data.jsonText || "");
+      if (!parsed) throw new Error("Could not parse report. Try again.");
+
+      setReport(parsed);
+      setProduct(data.product || { name: "Unknown product", brand: "", imageUrl: null });
+      setScreen("results");
+    } catch(e) {
+      setError(e.message);
+      setScreen("error");
+    } finally {
+      clearInterval(loadTimerRef.current);
+    }
+  }
+
+  function reset() { setScreen("scan"); setReport(null); setProduct(null); setError(""); }
+
+  return (
+    <div className="shell">
+      <div className="top-bar">
+        <div className="wordmark">True<span>Label</span></div>
+        <div className="tagline">Honest food intel</div>
+      </div>
+
+      {screen === "scan" && <ScanScreen onBarcode={handleBarcode} />}
+      {screen === "loading" && <LoadingScreen msg={loadMsg} />}
+      {screen === "results" && <ResultsScreen report={report} product={product} onReset={reset} />}
+      {screen === "error" && (
+        <div style={{flex:1}}>
+          <div className="err-box">{error}</div>
+          <button className="scan-again-btn" style={{marginTop:20}} onClick={reset}>← Try again</button>
         </div>
       )}
     </div>
