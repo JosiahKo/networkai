@@ -6,53 +6,32 @@
 <title>DupeFit</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap');
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#f8f6f2;
-  --surface:#fff;
-  --surface2:#f2ede6;
-  --border:#e4ddd4;
-  --border2:#ccc4b8;
-  --ink:#18150f;
-  --ink2:#6b6055;
-  --ink3:#a09488;
-  --ink4:#c8bfb4;
-  --accent:#18150f;
-  --green:#1a6644;
-  --green-bg:#eaf5ef;
-  --green-border:#b8dccb;
-  --pink:#b5164a;
-  --pink-bg:#fde8ef;
-  --pink-border:#f0b8cc;
-  --tag:#18150f;
-  --tag-text:#f8f6f2;
+  --bg:#f8f6f2;--surface:#fff;--surface2:#f2ede6;
+  --border:#e4ddd4;--border2:#ccc4b8;
+  --ink:#18150f;--ink2:#6b6055;--ink3:#a09488;--ink4:#c8bfb4;
+  --green:#1a6644;--green-bg:#eaf5ef;--green-border:#b8dccb;
+  --pink:#b5164a;--pink-bg:#fde8ef;--pink-border:#f0b8cc;
 }
 html{background:var(--bg);}
 body{font-family:'DM Sans',-apple-system,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;}
-
 .shell{max-width:560px;margin:0 auto;padding:0 20px 80px;min-height:100vh;display:flex;flex-direction:column;}
 
 .top-bar{display:flex;align-items:center;justify-content:space-between;padding:22px 0 18px;border-bottom:1px solid var(--border);margin-bottom:28px;flex-shrink:0;}
 .wordmark{font-size:16px;font-weight:700;letter-spacing:-0.02em;}
 .wordmark span{color:var(--ink3);}
-.beta{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:var(--tag);color:var(--tag-text);padding:2px 7px;border-radius:2px;margin-left:8px;vertical-align:2px;}
+.beta{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:var(--ink);color:var(--bg);padding:2px 7px;border-radius:2px;margin-left:8px;vertical-align:2px;}
 
 /* Upload */
 .upload-wrap{flex:1;display:flex;flex-direction:column;}
 .upload-title{font-size:24px;font-weight:600;letter-spacing:-0.03em;margin-bottom:8px;line-height:1.25;}
 .upload-hint{font-size:14px;color:var(--ink2);line-height:1.7;margin-bottom:24px;}
-
-.dropzone{
-  border:1.5px dashed var(--border2);border-radius:8px;
-  padding:36px 20px;text-align:center;cursor:pointer;
-  transition:all 0.2s;background:var(--surface);margin-bottom:20px;
-}
-.dropzone:hover,.dropzone.dragover{border-color:var(--ink);background:var(--surface2);}
+.dropzone{border:1.5px dashed var(--border2);border-radius:8px;padding:36px 20px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--surface);margin-bottom:20px;}
+.dropzone:hover,.dropzone.drag{border-color:var(--ink);background:var(--surface2);}
 .dz-icon{font-size:28px;margin-bottom:8px;}
 .dz-text{font-size:14px;font-weight:500;color:var(--ink2);margin-bottom:3px;}
 .dz-sub{font-size:12px;color:var(--ink3);}
-
 .preview-wrap{position:relative;margin-bottom:20px;}
 .preview-img{width:100%;max-height:380px;object-fit:contain;border-radius:6px;border:1px solid var(--border);background:var(--surface);}
 .preview-clear{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,0.55);color:#fff;border:none;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
@@ -63,7 +42,7 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:var(--bg);color:v
 .chip:hover{border-color:var(--ink2);color:var(--ink);}
 .chip.on{border-color:var(--ink);background:var(--ink);color:#fff;}
 
-.btn-main{width:100%;padding:13px;background:var(--ink);color:var(--bg);border:none;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border-radius:4px;transition:opacity 0.15s;letter-spacing:0.01em;}
+.btn-main{width:100%;padding:13px;background:var(--ink);color:var(--bg);border:none;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border-radius:4px;transition:opacity 0.15s;}
 .btn-main:hover{opacity:0.85;}
 .btn-main:disabled{opacity:0.3;cursor:not-allowed;}
 
@@ -80,7 +59,6 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:var(--bg);color:v
 .results-sub{font-size:12px;color:var(--ink3);margin-bottom:16px;}
 .found-banner{display:flex;align-items:center;gap:8px;padding:9px 14px;background:var(--green-bg);border:1px solid var(--green-border);border-radius:4px;font-size:13px;font-weight:600;color:var(--green);margin-bottom:24px;}
 
-/* Piece card */
 .piece-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:14px;}
 .piece-header{padding:14px 16px 10px;}
 .piece-name{font-size:15px;font-weight:600;letter-spacing:-0.01em;margin-bottom:2px;}
@@ -89,36 +67,26 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:var(--bg);color:v
 .piece-orig{font-size:11px;font-family:'DM Mono',monospace;color:var(--ink3);}
 .piece-desc{font-size:12px;color:var(--ink2);margin-top:4px;line-height:1.6;}
 
-/* Alt items */
-.alt-item{
-  display:flex;align-items:stretch;gap:0;
-  border-top:1px solid var(--border);
-  text-decoration:none;color:inherit;
-  transition:background 0.15s;
-}
+/* Alt item — image on left */
+.alt-item{display:flex;align-items:stretch;border-top:1px solid var(--border);text-decoration:none;color:inherit;transition:background 0.15s;}
 .alt-item:hover{background:var(--surface2);}
-
-.alt-img-wrap{width:80px;flex-shrink:0;background:var(--surface2);overflow:hidden;position:relative;}
-.alt-img{width:80px;height:100%;object-fit:cover;display:block;min-height:80px;}
-.alt-img-placeholder{width:80px;min-height:80px;display:flex;align-items:center;justify-content:center;font-size:22px;background:var(--surface2);}
-
-.alt-content{flex:1;padding:10px 12px;display:flex;flex-direction:column;justify-content:center;min-width:0;}
-.alt-store-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;}
-.alt-store{font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink3);}
-.alt-price{font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:var(--green);}
-.alt-name{font-size:13px;font-weight:500;color:var(--ink);line-height:1.35;margin-bottom:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.alt-img-box{width:88px;min-height:88px;flex-shrink:0;background:var(--surface2);overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.alt-img{width:88px;height:88px;object-fit:cover;display:block;}
+.alt-placeholder{font-size:24px;width:88px;height:88px;display:flex;align-items:center;justify-content:center;background:var(--surface2);color:var(--ink4);}
+.alt-body{flex:1;padding:10px 12px;display:flex;flex-direction:column;justify-content:center;min-width:0;}
+.alt-top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;gap:8px;}
+.alt-store{font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink3);}
+.alt-price{font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:var(--green);white-space:nowrap;}
+.alt-name{font-size:13px;font-weight:500;line-height:1.35;margin-bottom:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .alt-why{font-size:11px;color:var(--ink2);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.alt-arrow{font-size:12px;color:var(--ink4);padding:10px 10px 10px 4px;display:flex;align-items:center;flex-shrink:0;}
+.alt-arrow{font-size:14px;color:var(--ink4);padding:0 10px;display:flex;align-items:center;flex-shrink:0;}
 
 .secondhand-tip{padding:10px 14px;background:var(--pink-bg);border-top:1px solid var(--pink-border);font-size:12px;color:var(--pink);line-height:1.6;}
 .secondhand-tip::before{content:'♻  ';}
 
 .reset-btn{margin-top:20px;width:100%;padding:11px;background:transparent;color:var(--ink2);border:1px solid var(--border);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;border-radius:4px;transition:all 0.15s;}
 .reset-btn:hover{border-color:var(--border2);color:var(--ink);}
-
 .err-box{background:#fff0f0;border:1px solid #ffcdd2;border-radius:4px;padding:14px 16px;font-size:13px;color:#c62828;line-height:1.7;margin-top:12px;}
-
-@media(max-width:400px){.upload-title{font-size:21px;}.alt-img-wrap{width:68px;}.alt-img{width:68px;}}
 </style>
 </head>
 <body>
@@ -128,6 +96,8 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:var(--bg);color:v
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script>
   const PROXY_URL = "https://polished-dust-8e7a.josiahkondo.workers.dev";
+  // Images are proxied through the Worker to avoid CORS blocking
+  const imgProxy = (url) => url ? PROXY_URL + "?image=" + encodeURIComponent(url) : null;
 </script>
 <script type="text/babel">
 const { useState, useRef } = React;
@@ -146,8 +116,8 @@ const SEXES = [
 const LOAD_MSGS = [
   "Analyzing your outfit...",
   "Identifying each piece...",
-  "Searching retail stores...",
-  "Pulling product images...",
+  "Searching for specific products...",
+  "Loading product images...",
   "Building your look...",
 ];
 
@@ -160,82 +130,37 @@ function extractJSON(raw) {
   return null;
 }
 
-function UploadScreen({ onSubmit }) {
-  const [image, setImage] = useState(null);
-  const [imageData, setImageData] = useState(null);
-  const [imageType, setImageType] = useState("image/jpeg");
-  const [budget, setBudget] = useState("100");
-  const [sex, setSex] = useState("female");
-  const [dragging, setDragging] = useState(false);
-  const fileRef = useRef(null);
+function AltImage({ imageUrl, altText }) {
+  const [state, setState] = useState("loading"); // loading | loaded | error
 
-  function handleFile(file) {
-    if (!file || !file.type.startsWith("image/")) return;
-    setImageType(file.type);
-    const reader = new FileReader();
-    reader.onload = e => {
-      setImage(e.target.result);
-      setImageData(e.target.result.split(",")[1]);
-    };
-    reader.readAsDataURL(file);
-  }
+  if (!imageUrl) return <div className="alt-placeholder">🛍</div>;
 
+  const proxied = imgProxy(imageUrl);
   return (
-    <div className="upload-wrap">
-      <div className="upload-title">Recreate any outfit on a budget.</div>
-      <div className="upload-hint">Upload an outfit photo — Instagram, Pinterest, screenshot, anything. We'll identify every piece and find the best affordable alternatives with real product images.</div>
-
-      {!image ? (
-        <div
-          className={"dropzone"+(dragging?" dragover":"")}
-          onDragOver={e=>{e.preventDefault();setDragging(true);}}
-          onDragLeave={()=>setDragging(false)}
-          onDrop={e=>{e.preventDefault();setDragging(false);const f=e.dataTransfer.files[0];if(f)handleFile(f);}}
-          onClick={()=>fileRef.current&&fileRef.current.click()}
-        >
-          <input ref={fileRef} type="file" accept="image/*" style={{display:"none"}} onChange={e=>e.target.files[0]&&handleFile(e.target.files[0])} />
-          <div className="dz-icon">📸</div>
-          <div className="dz-text">Tap to upload outfit photo</div>
-          <div className="dz-sub">JPG · PNG · WEBP · screenshot</div>
-        </div>
-      ) : (
-        <div className="preview-wrap">
-          <img className="preview-img" src={image} alt="outfit" />
-          <button className="preview-clear" onClick={()=>{setImage(null);setImageData(null);}}>×</button>
-        </div>
-      )}
-
-      <div className="field-label">Shopping for</div>
-      <div className="chip-row">
-        {SEXES.map(s=><button key={s.id} className={"chip"+(sex===s.id?" on":"")} onClick={()=>setSex(s.id)}>{s.label}</button>)}
-      </div>
-
-      <div className="field-label">Budget per piece</div>
-      <div className="chip-row">
-        {BUDGETS.map(b=><button key={b.id} className={"chip"+(budget===b.id?" on":"")} onClick={()=>setBudget(b.id)}>{b.label}</button>)}
-      </div>
-
-      <button className="btn-main" onClick={()=>onSubmit({imageBase64:imageData,imageType,budget,sex})} disabled={!imageData}>
-        {imageData ? "Find budget alternatives →" : "Upload a photo to start"}
-      </button>
+    <div className="alt-img-box">
+      {state === "error"
+        ? <div className="alt-placeholder">🛍</div>
+        : <img
+            className="alt-img"
+            src={proxied}
+            alt={altText || "product"}
+            onLoad={() => setState("loaded")}
+            onError={() => setState("error")}
+            style={state === "loading" ? {opacity:0} : {opacity:1,transition:"opacity 0.2s"}}
+          />
+      }
     </div>
   );
 }
 
 function AltItem({ alt }) {
-  const [imgError, setImgError] = useState(false);
   return (
     <a className="alt-item" href={alt.url} target="_blank" rel="noopener noreferrer">
-      <div className="alt-img-wrap">
-        {alt.imageUrl && !imgError
-          ? <img className="alt-img" src={alt.imageUrl} alt={alt.name} onError={()=>setImgError(true)} />
-          : <div className="alt-img-placeholder">🛍</div>
-        }
-      </div>
-      <div className="alt-content">
-        <div className="alt-store-row">
+      <AltImage imageUrl={alt.imageUrl} altText={alt.name} />
+      <div className="alt-body">
+        <div className="alt-top-row">
           <span className="alt-store">{alt.store}</span>
-          <span className="alt-price">{alt.priceGuess || "View"}</span>
+          <span className="alt-price">{alt.priceGuess || "View →"}</span>
         </div>
         <div className="alt-name">{alt.name}</div>
         {alt.why && <div className="alt-why">{alt.why}</div>}
@@ -259,10 +184,65 @@ function PieceCard({ piece }) {
         </div>
         {piece.description && <div className="piece-desc">{piece.description}</div>}
       </div>
-      {alts.map((alt,i) => <AltItem key={i} alt={alt} />)}
+      {alts.map((alt, i) => <AltItem key={i} alt={alt} />)}
       {piece.secondhandTip && piece.secondhandTip !== "null" && (
         <div className="secondhand-tip">{piece.secondhandTip}</div>
       )}
+    </div>
+  );
+}
+
+function UploadScreen({ onSubmit }) {
+  const [image, setImage] = useState(null);
+  const [imageData, setImageData] = useState(null);
+  const [imageType, setImageType] = useState("image/jpeg");
+  const [budget, setBudget] = useState("100");
+  const [sex, setSex] = useState("female");
+  const [drag, setDrag] = useState(false);
+  const fileRef = useRef(null);
+
+  function handleFile(file) {
+    if (!file || !file.type.startsWith("image/")) return;
+    setImageType(file.type);
+    const r = new FileReader();
+    r.onload = e => { setImage(e.target.result); setImageData(e.target.result.split(",")[1]); };
+    r.readAsDataURL(file);
+  }
+
+  return (
+    <div className="upload-wrap">
+      <div className="upload-title">Recreate any outfit on a budget.</div>
+      <div className="upload-hint">Upload any outfit photo — Instagram, Pinterest, a screenshot. We'll identify every piece and find specific, shoppable alternatives with real product images.</div>
+
+      {!image ? (
+        <div className={"dropzone"+(drag?" drag":"")}
+          onDragOver={e=>{e.preventDefault();setDrag(true);}}
+          onDragLeave={()=>setDrag(false)}
+          onDrop={e=>{e.preventDefault();setDrag(false);const f=e.dataTransfer.files[0];if(f)handleFile(f);}}
+          onClick={()=>fileRef.current&&fileRef.current.click()}>
+          <input ref={fileRef} type="file" accept="image/*" style={{display:"none"}} onChange={e=>e.target.files[0]&&handleFile(e.target.files[0])} />
+          <div className="dz-icon">📸</div>
+          <div className="dz-text">Tap to upload outfit photo</div>
+          <div className="dz-sub">JPG · PNG · WEBP · screenshot</div>
+        </div>
+      ) : (
+        <div className="preview-wrap">
+          <img className="preview-img" src={image} alt="outfit" />
+          <button className="preview-clear" onClick={()=>{setImage(null);setImageData(null);}}>×</button>
+        </div>
+      )}
+
+      <div className="field-label">Shopping for</div>
+      <div className="chip-row">
+        {SEXES.map(s=><button key={s.id} className={"chip"+(sex===s.id?" on":"")} onClick={()=>setSex(s.id)}>{s.label}</button>)}
+      </div>
+      <div className="field-label">Budget per piece</div>
+      <div className="chip-row">
+        {BUDGETS.map(b=><button key={b.id} className={"chip"+(budget===b.id?" on":"")} onClick={()=>setBudget(b.id)}>{b.label}</button>)}
+      </div>
+      <button className="btn-main" onClick={()=>onSubmit({imageBase64:imageData,imageType,budget,sex})} disabled={!imageData}>
+        {imageData ? "Find budget alternatives →" : "Upload a photo to start"}
+      </button>
     </div>
   );
 }
@@ -275,33 +255,25 @@ function App() {
   const [error, setError] = useState("");
   const timerRef = useRef(null);
 
-  async function handleSubmit({ imageBase64, imageType, budget, sex }) {
+  async function handleSubmit({imageBase64,imageType,budget,sex}) {
     setError(""); setScreen("loading"); setLoadMsg(LOAD_MSGS[0]);
-    let idx = 0;
-    timerRef.current = setInterval(() => {
-      idx = Math.min(idx+1, LOAD_MSGS.length-1);
-      setLoadMsg(LOAD_MSGS[idx]);
+    let i=0;
+    timerRef.current = setInterval(()=>{
+      i=Math.min(i+1,LOAD_MSGS.length-1); setLoadMsg(LOAD_MSGS[i]);
     }, 6000);
     try {
       const res = await fetch(PROXY_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imageBase64, imageType, budget, sex })
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({imageBase64,imageType,budget,sex})
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
-      const parsed = extractJSON(data.jsonText || "");
-      if (!parsed || !Array.isArray(parsed) || parsed.length === 0) {
-        throw new Error("Could not find alternatives. Try a clearer outfit photo.");
-      }
-      setResults(parsed);
-      setPieceCount(data.pieceCount || parsed.length);
-      setScreen("results");
-    } catch(e) {
-      setError(e.message); setScreen("error");
-    } finally {
-      clearInterval(timerRef.current);
-    }
+      const parsed = extractJSON(data.jsonText||"");
+      if (!parsed||!Array.isArray(parsed)||parsed.length===0)
+        throw new Error("Could not find alternatives. Try a clearer outfit photo with good lighting.");
+      setResults(parsed); setPieceCount(data.pieceCount||parsed.length); setScreen("results");
+    } catch(e) { setError(e.message); setScreen("error"); }
+    finally { clearInterval(timerRef.current); }
   }
 
   function reset() { setScreen("upload"); setResults(null); setError(""); }
@@ -310,33 +282,32 @@ function App() {
     <div className="shell">
       <div className="top-bar">
         <div style={{display:"flex",alignItems:"center"}}>
-          <div className="wordmark">Dupe<span>Fit</span></div>
-          <span className="beta">Beta</span>
+          <div className="wordmark">Dupe<span>Fit</span><span className="beta">Beta</span></div>
         </div>
-        <div style={{fontSize:11,color:"var(--ink3)",letterSpacing:"0.05em",textTransform:"uppercase"}}>Budget fashion AI</div>
+        <div style={{fontSize:11,color:"var(--ink3)",letterSpacing:"0.05em",textTransform:"uppercase"}}>AI outfit finder</div>
       </div>
 
-      {screen === "upload" && <UploadScreen onSubmit={handleSubmit} />}
+      {screen==="upload" && <UploadScreen onSubmit={handleSubmit} />}
 
-      {screen === "loading" && (
+      {screen==="loading" && (
         <div className="load-wrap">
-          <div className="load-ring" />
+          <div className="load-ring"/>
           <div className="load-msg">{loadMsg}</div>
           <div className="load-sub">Usually 25–40 seconds</div>
         </div>
       )}
 
-      {screen === "results" && results && (
+      {screen==="results" && results && (
         <div className="results-wrap">
           <div className="results-title">Your budget look</div>
           <div className="results-sub">{pieceCount} piece{pieceCount!==1?"s":""} identified</div>
-          <div className="found-banner">✓ Tap any item to shop directly</div>
-          {results.map((p,i) => <PieceCard key={i} piece={p} />)}
+          <div className="found-banner">✓ Tap any item to shop — each link goes to the specific product page</div>
+          {results.map((p,i)=><PieceCard key={i} piece={p}/>)}
           <button className="reset-btn" onClick={reset}>← Try another outfit</button>
         </div>
       )}
 
-      {screen === "error" && (
+      {screen==="error" && (
         <div style={{flex:1}}>
           <div className="err-box">{error}</div>
           <button className="reset-btn" style={{marginTop:14}} onClick={reset}>← Try again</button>
