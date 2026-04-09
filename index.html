@@ -302,14 +302,13 @@ function App() {
     const senderContext = myBio ? myBio : "a student";
     const targetContext = targetGoal ? "Their career target: " + targetGoal + "." : "";
 
-    const researchPrompt = "You are a professional networking research assistant helping a student find career connections. " +
-      "Search the web to find " + count + " real professionals matching: " + searchDesc + ". " + targetContext + "\n\n" +
-      "Search publicly available sources: university alumni directories, company team pages, club and organization rosters, professional association listings, and news articles. " +
-      "When you find a page listing multiple people, extract every matching person from it. " +
-      "For each person write: full name, current title, company, graduation year if known, LinkedIn profile URL if visible, and the source page URL. " +
-      "Keep your summary brief and factual.";
+    const researchPrompt = "Search the web and find " + count + " people who match this description: " + searchDesc + ". " + targetContext + "\n\n" +
+      "Search for: alumni club websites, university organization pages, company about/team pages, conference speaker bios, news articles, and professional association member lists. " +
+      "These are all publicly published sources. Read any list or roster pages you find and extract every relevant person. " +
+      "For each person summarize: their name, role, employer, school, graduation year if shown, any profile URL you see, and the URL of the page where you found them. " +
+      "Write a plain text summary of your findings.";
 
-    const jsonPrompt = "Convert these research notes to a JSON array. Return ONLY the array starting with [. No explanation.\n\n" +
+    const jsonPrompt = "Convert these research notes into a JSON array. Return ONLY the array starting with [. No explanation. If a person has no real name (e.g. \"Unable to retrieve\" or \"No results\"), skip them entirely — do not include placeholder entries.\n\n" +
       "Notes:\n" + "FINDINGS_PLACEHOLDER" + "\n\n" +
       "Each object: {\"name\":\"\",\"title\":\"\",\"company\":\"\",\"location\":\"\",\"linkedinUrl\":\"url or null\"," +
       "\"otherSources\":[{\"label\":\"\",\"url\":\"\"}]," +
