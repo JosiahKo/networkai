@@ -302,15 +302,12 @@ function App() {
     const senderContext = myBio ? myBio : "a student";
     const targetContext = targetGoal ? "Their career target: " + targetGoal + "." : "";
 
-    // Research prompt — targets LinkedIn via site: operator + public directories
-    const researchPrompt = "Find " + count + " real people matching: " + searchDesc + ".\n" +
-      "Sender: " + senderName + " (" + senderContext + "). " + targetContext + "\n\n" +
-      "Use these search strategies in order:\n" +
-      "1. Search Google with site:linkedin.com plus key terms, e.g.: site:linkedin.com \"Boston College\" \"JPMorgan\" \"investment banking\" \"analyst\"\n" +
-      "2. Search for club rosters, alumni directories, athletic department pages, and company team pages\n" +
-      "3. When you find a list or roster page, read it fully and extract ALL matching people\n" +
-      "4. For each person found, note their full name, current title, company, graduation year, LinkedIn URL, and the page where you found them\n\n" +
-      "Do 2-3 targeted searches. Write a brief plain-text summary of every person you found with all details.";
+    const researchPrompt = "You are a professional networking research assistant helping a student find career connections. " +
+      "Search the web to find " + count + " real professionals matching: " + searchDesc + ". " + targetContext + "\n\n" +
+      "Search publicly available sources: university alumni directories, company team pages, club and organization rosters, professional association listings, and news articles. " +
+      "When you find a page listing multiple people, extract every matching person from it. " +
+      "For each person write: full name, current title, company, graduation year if known, LinkedIn profile URL if visible, and the source page URL. " +
+      "Keep your summary brief and factual.";
 
     const jsonPrompt = "Convert these research notes to a JSON array. Return ONLY the array starting with [. No explanation.\n\n" +
       "Notes:\n" + "FINDINGS_PLACEHOLDER" + "\n\n" +
