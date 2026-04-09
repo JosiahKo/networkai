@@ -269,8 +269,10 @@ function App() {
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       const parsed = extractJSON(data.jsonText||"");
-      if (!parsed||!Array.isArray(parsed)||parsed.length===0)
-        throw new Error("Could not find alternatives. Try a clearer outfit photo with good lighting.");
+      if (!parsed||!Array.isArray(parsed)||parsed.length===0) {
+        const dbg = data.debug ? "\n\nDebug:\n" + data.debug : "";
+        throw new Error("Could not find alternatives. Try a clearer outfit photo." + dbg);
+      }
       setResults(parsed); setPieceCount(data.pieceCount||parsed.length); setScreen("results");
     } catch(e) { setError(e.message); setScreen("error"); }
     finally { clearInterval(timerRef.current); }
