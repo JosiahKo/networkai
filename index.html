@@ -3,128 +3,250 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>PitchMatch</title>
+<title>Dead Mentors</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#f5f2ec;
-  --ink:#1a1714;
-  --ink2:#6b6560;
-  --ink3:#a09a94;
-  --surface:#edeae3;
-  --surface2:#e4e0d8;
-  --border:#d4cfc7;
-  --accent:#c8502a;
-  --accent2:#e8693f;
-  --green:#2d6a4f;
-  --green-bg:#d8f3dc;
+  --parchment:#f7f2e8;
+  --parchment2:#f0e9d6;
+  --parchment3:#e8dfc8;
+  --ink:#1c1208;
+  --ink2:#5c4a2a;
+  --ink3:#8b7355;
+  --ink4:#b8a888;
+  --rust:#8b3a1a;
+  --rust2:#a84820;
+  --sepia:#c8a96e;
+  --border:#d4c4a0;
+  --border2:#c0ae88;
 }
-body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+html{background:var(--parchment);}
+body{
+  font-family:'EB Garamond',Georgia,serif;
+  background:var(--parchment);
+  color:var(--ink);
+  min-height:100vh;
+  font-size:17px;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
 
-.shell{max-width:680px;margin:0 auto;padding:0 28px 80px;min-height:100vh;display:flex;flex-direction:column;}
+/* Subtle paper texture via gradient */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(180,160,100,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(200,180,120,0.06) 0%, transparent 50%);
+  pointer-events:none;
+  z-index:0;
+}
+
+.shell{
+  max-width:660px;margin:0 auto;
+  padding:0 32px 80px;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  position:relative;z-index:1;
+}
 
 /* Header */
-.top-bar{display:flex;align-items:center;justify-content:space-between;padding:28px 0 36px;border-bottom:1.5px solid var(--border);margin-bottom:48px;flex-shrink:0;}
-.wordmark{font-size:18px;font-weight:800;letter-spacing:-0.02em;color:var(--ink);}
-.wordmark span{color:var(--accent);}
-.progress-track{display:flex;gap:4px;}
-.ptick{width:20px;height:3px;border-radius:2px;background:var(--border);transition:background 0.3s;}
+.top-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:36px 0 32px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:52px;flex-shrink:0;
+}
+.wordmark{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-weight:300;
+  letter-spacing:0.08em;
+  color:var(--ink2);
+  text-transform:uppercase;
+  font-style:italic;
+}
+.wordmark em{color:var(--rust);font-style:italic;}
+.progress-track{display:flex;gap:6px;}
+.ptick{width:24px;height:1px;background:var(--border2);transition:background 0.4s;}
 .ptick.done{background:var(--ink3);}
-.ptick.active{background:var(--accent);}
+.ptick.active{background:var(--rust);}
 
 /* Steps */
-.step-wrap{flex:1;display:flex;flex-direction:column;min-height:460px;animation:up 0.25s ease both;}
-@keyframes up{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-.step-tag{font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:20px;}
-.step-q{font-family:'Instrument Serif',serif;font-size:32px;font-weight:400;color:var(--ink);margin-bottom:10px;line-height:1.25;font-style:italic;}
-.step-hint{font-size:13px;color:var(--ink2);margin-bottom:36px;line-height:1.7;font-family:'Syne',sans-serif;}
+.step-wrap{flex:1;display:flex;flex-direction:column;min-height:460px;animation:emerge 0.4s ease both;}
+@keyframes emerge{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.step-tag{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--rust);margin-bottom:22px;font-family:'EB Garamond',serif;}
+.step-q{
+  font-family:'Cormorant Garamond',serif;
+  font-size:36px;font-weight:300;font-style:italic;
+  color:var(--ink);margin-bottom:12px;
+  line-height:1.2;letter-spacing:-0.01em;
+}
+.step-hint{font-size:15px;color:var(--ink2);margin-bottom:38px;line-height:1.75;font-style:italic;}
 
 /* Inputs */
-.input-line{width:100%;background:transparent;border:none;border-bottom:2px solid var(--border);color:var(--ink);font-family:'Syne',sans-serif;font-size:18px;font-weight:500;padding:10px 0;outline:none;transition:border-color 0.2s;}
-.input-line::placeholder{color:var(--ink3);font-weight:400;}
-.input-line:focus{border-bottom-color:var(--accent);}
-.textarea-line{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:6px;color:var(--ink);font-family:'Syne',sans-serif;font-size:14px;font-weight:400;line-height:1.7;padding:14px 16px;outline:none;resize:none;transition:border-color 0.2s;min-height:90px;}
-.textarea-line::placeholder{color:var(--ink3);}
-.textarea-line:focus{border-color:var(--accent);}
+.input-line{
+  width:100%;background:transparent;border:none;
+  border-bottom:1px solid var(--border2);
+  color:var(--ink);font-family:'EB Garamond',serif;
+  font-size:19px;padding:10px 0;outline:none;
+  transition:border-color 0.2s;
+}
+.input-line::placeholder{color:var(--ink4);}
+.input-line:focus{border-bottom-color:var(--rust);}
+
+.textarea-field{
+  width:100%;background:var(--parchment2);
+  border:1px solid var(--border);
+  color:var(--ink);font-family:'EB Garamond',serif;
+  font-size:17px;line-height:1.75;
+  padding:16px 18px;outline:none;resize:none;
+  transition:border-color 0.2s;min-height:100px;
+}
+.textarea-field::placeholder{color:var(--ink4);font-style:italic;}
+.textarea-field:focus{border-color:var(--rust);}
 
 /* Chips */
 .chip-set{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
-.chip{padding:8px 18px;border-radius:30px;border:1.5px solid var(--border);background:transparent;color:var(--ink2);font-family:'Syne',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.15s;}
-.chip:hover{border-color:var(--accent);color:var(--accent);}
-.chip.on{border-color:var(--accent);color:var(--bg);background:var(--accent);}
+.chip{
+  padding:7px 18px;border:1px solid var(--border2);
+  background:transparent;color:var(--ink2);
+  font-family:'EB Garamond',serif;font-size:15px;
+  cursor:pointer;transition:all 0.15s;
+  font-style:italic;
+}
+.chip:hover{border-color:var(--rust);color:var(--rust);}
+.chip.on{border-color:var(--rust);color:var(--parchment);background:var(--rust);}
 
 /* Nav */
-.nav{display:flex;align-items:center;gap:10px;margin-top:auto;padding-top:40px;}
-.btn-go{padding:12px 28px;background:var(--ink);color:var(--bg);border:none;border-radius:4px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:0.04em;transition:all 0.15s;text-transform:uppercase;}
-.btn-go:hover{background:var(--accent);}
-.btn-back{padding:12px 18px;background:transparent;color:var(--ink2);border:1.5px solid var(--border);border-radius:4px;font-family:'Syne',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.15s;}
-.btn-back:hover{color:var(--ink);border-color:var(--ink2);}
-.btn-skip{margin-left:auto;background:none;border:none;color:var(--ink3);font-family:'Syne',sans-serif;font-size:12px;font-weight:500;cursor:pointer;padding:4px;letter-spacing:0.03em;}
-.btn-skip:hover{color:var(--ink2);}
+.nav{display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:44px;}
+.btn-go{
+  padding:11px 28px;background:var(--ink);color:var(--parchment);
+  border:none;font-family:'EB Garamond',serif;
+  font-size:15px;letter-spacing:0.06em;
+  cursor:pointer;transition:background 0.2s;
+  font-style:italic;
+}
+.btn-go:hover{background:var(--rust);}
+.btn-back{
+  padding:11px 18px;background:transparent;color:var(--ink3);
+  border:1px solid var(--border2);
+  font-family:'EB Garamond',serif;font-size:15px;
+  cursor:pointer;transition:all 0.15s;
+}
+.btn-back:hover{color:var(--ink);border-color:var(--ink3);}
+.btn-skip{
+  margin-left:auto;background:none;border:none;
+  color:var(--ink4);font-family:'EB Garamond',serif;
+  font-size:14px;cursor:pointer;font-style:italic;
+}
+.btn-skip:hover{color:var(--ink3);}
 
 /* Loading */
 .load-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:460px;text-align:center;}
-.load-icon{width:48px;height:48px;margin-bottom:24px;position:relative;}
-.load-icon::before,.load-icon::after{content:'';position:absolute;border-radius:50%;}
-.load-icon::before{inset:0;border:2px solid var(--border);}
-.load-icon::after{inset:0;border:2px solid transparent;border-top-color:var(--accent);animation:spin 0.9s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.load-msg{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:6px;}
-.load-sub{font-size:12px;color:var(--ink2);letter-spacing:0.03em;}
+.load-hourglass{font-size:28px;margin-bottom:24px;animation:flicker 3s ease-in-out infinite;}
+@keyframes flicker{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.load-msg{font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:var(--ink2);margin-bottom:8px;}
+.load-sub{font-size:13px;color:var(--ink3);letter-spacing:0.05em;}
 
 /* Results */
 .results-wrap{flex:1;padding-top:4px;}
-.results-head{margin-bottom:10px;}
-.results-title{font-family:'Instrument Serif',serif;font-size:32px;font-style:italic;letter-spacing:-0.01em;}
-.results-meta{font-size:12px;color:var(--ink2);margin-top:4px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;}
-.results-tip{font-size:12px;color:var(--ink2);line-height:1.7;padding:12px 16px;background:var(--surface);border-radius:4px;margin:16px 0 28px;border-left:3px solid var(--accent);}
+.results-head{margin-bottom:8px;}
+.results-title{font-family:'Cormorant Garamond',serif;font-size:38px;font-style:italic;font-weight:300;letter-spacing:-0.01em;color:var(--ink);}
+.results-sub{font-size:13px;color:var(--ink3);margin-top:6px;letter-spacing:0.06em;text-transform:uppercase;}
+.results-note{
+  font-size:14px;color:var(--ink2);line-height:1.75;
+  padding:14px 18px;background:var(--parchment2);
+  border-left:2px solid var(--rust);
+  margin:20px 0 36px;font-style:italic;
+}
 
-/* Investor card */
-.inv-card{border-top:1.5px solid var(--border);padding:28px 0;}
-.inv-card:last-of-type{border-bottom:1.5px solid var(--border);}
-.inv-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:12px;}
-.inv-num{font-size:10px;font-weight:700;color:var(--ink3);padding-top:5px;min-width:22px;letter-spacing:0.08em;}
-.inv-info{flex:1;}
-.inv-name{font-size:18px;font-weight:700;margin-bottom:2px;letter-spacing:-0.01em;}
-.inv-role{font-size:13px;color:var(--ink2);line-height:1.5;}
-.inv-score{font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--green);background:var(--green-bg);padding:4px 10px;border-radius:20px;flex-shrink:0;}
+/* Mentor card */
+.mentor-card{border-top:1px solid var(--border);padding:34px 0;}
+.mentor-card:last-of-type{border-bottom:1px solid var(--border);}
+.mentor-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;}
+.mentor-name{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:400;letter-spacing:-0.01em;}
+.mentor-years{font-size:13px;color:var(--ink3);font-style:italic;margin-top:2px;}
+.mentor-source{
+  font-size:12px;color:var(--rust);
+  letter-spacing:0.05em;text-transform:uppercase;
+  margin-top:2px;
+}
 
-.inv-focus{font-size:13px;color:var(--ink2);line-height:1.7;margin:0 0 12px 36px;font-style:italic;}
+.mentor-context{
+  font-size:14px;color:var(--ink2);line-height:1.7;
+  margin:16px 0;font-style:italic;
+  padding-left:16px;border-left:1px solid var(--border2);
+}
 
-.portfolio-row{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px 36px;}
-.portfolio-tag{font-size:11px;font-weight:600;color:var(--accent);background:#fdf0ec;border:1px solid #f0c4b4;padding:3px 10px;border-radius:20px;letter-spacing:0.03em;}
+/* The actual passage — the centrepiece */
+.passage-wrap{
+  background:var(--parchment2);
+  border:1px solid var(--border);
+  padding:24px 26px;
+  margin:18px 0;
+  position:relative;
+}
+.passage-wrap::before{
+  content:'\201C';
+  font-family:'Cormorant Garamond',serif;
+  font-size:80px;color:var(--sepia);
+  position:absolute;top:-10px;left:12px;
+  line-height:1;opacity:0.6;
+}
+.passage-text{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-style:italic;
+  line-height:1.65;color:var(--ink);
+  padding-left:24px;
+}
+.passage-attr{
+  font-size:13px;color:var(--ink3);
+  margin-top:12px;padding-left:24px;
+  letter-spacing:0.03em;
+}
 
-.inv-why{font-size:13px;color:var(--ink);line-height:1.75;margin:0 0 14px 36px;}
+.resonance-text{font-size:15px;color:var(--ink2);line-height:1.75;margin:14px 0;}
 
-.inv-links{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px 36px;}
-.inv-link{font-size:11px;font-weight:600;color:var(--ink2);border-bottom:1px solid var(--border);text-decoration:none;padding-bottom:1px;letter-spacing:0.04em;transition:all 0.15s;text-transform:uppercase;}
-.inv-link:hover{color:var(--accent);border-color:var(--accent);}
-.inv-link.primary{color:var(--accent);border-color:#f0c4b4;}
-.inv-link.primary:hover{color:var(--accent2);}
+.mentor-footer{display:flex;align-items:center;gap:16px;margin-top:14px;}
+.source-link{
+  font-size:12px;color:var(--rust);
+  border-bottom:1px solid var(--border2);
+  text-decoration:none;padding-bottom:1px;
+  letter-spacing:0.05em;text-transform:uppercase;
+  transition:all 0.15s;
+}
+.source-link:hover{border-color:var(--rust);}
 
-.inv-actions{display:flex;gap:8px;margin-left:36px;flex-wrap:wrap;}
-.act-btn{font-size:11px;font-weight:700;letter-spacing:0.06em;font-family:'Syne',sans-serif;padding:7px 14px;border-radius:3px;cursor:pointer;transition:all 0.15s;text-transform:uppercase;border:1.5px solid var(--border);background:transparent;color:var(--ink2);}
-.act-btn:hover{border-color:var(--ink2);color:var(--ink);}
-
-.pitch-block{margin:14px 0 0 36px;background:var(--surface);border:1.5px solid var(--border);border-radius:4px;padding:18px 20px;}
-.pitch-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;}
-.pitch-body{font-size:13px;line-height:1.85;white-space:pre-wrap;color:var(--ink2);}
-.copy-btn{margin-top:12px;background:none;border:none;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--ink3);cursor:pointer;padding:0;letter-spacing:0.06em;text-transform:uppercase;}
-.copy-btn:hover{color:var(--ink2);}
-
-/* Summary */
-.summary-line{font-size:14px;color:var(--ink2);margin-bottom:8px;line-height:1.8;}
-.summary-line strong{color:var(--ink);font-weight:600;}
-
-.restart-btn{margin-top:32px;background:none;border:none;font-family:'Syne',sans-serif;font-size:12px;font-weight:600;color:var(--ink3);cursor:pointer;padding:0;letter-spacing:0.06em;text-transform:uppercase;}
+.restart-btn{
+  margin-top:40px;background:none;border:none;
+  font-family:'EB Garamond',serif;font-size:14px;
+  color:var(--ink3);cursor:pointer;
+  font-style:italic;letter-spacing:0.03em;
+}
 .restart-btn:hover{color:var(--ink2);}
 
-.err-box{background:#fdf0ec;border:1.5px solid #f0c4b4;border-radius:4px;padding:16px 18px;font-size:13px;color:#8b3520;line-height:1.7;margin-top:20px;}
-.err-raw{margin-top:8px;font-size:11px;color:#c4a090;font-family:monospace;word-break:break-all;max-height:80px;overflow-y:auto;}
+/* Summary */
+.sum-line{font-size:16px;color:var(--ink2);margin-bottom:10px;line-height:1.8;font-style:italic;}
+.sum-line strong{color:var(--ink);font-weight:500;font-style:normal;}
 
-@media(max-width:500px){.step-q{font-size:26px;}}
+/* Error */
+.err-box{
+  background:var(--parchment2);border:1px solid #c4a08a;
+  padding:18px 20px;font-size:14px;color:var(--rust);
+  line-height:1.7;margin-top:20px;font-style:italic;
+}
+.err-raw{margin-top:8px;font-size:11px;color:var(--ink4);font-family:monospace;font-style:normal;word-break:break-all;max-height:80px;overflow-y:auto;}
+
+.divider{
+  text-align:center;color:var(--border2);
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;letter-spacing:0.3em;
+  margin:8px 0;
+}
+
+@media(max-width:500px){.step-q{font-size:28px;}.passage-text{font-size:17px;}}
 </style>
 </head>
 <body>
@@ -140,21 +262,22 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
 <script type="text/babel">
 const { useState, useEffect, useRef } = React;
 
-const TOTAL_STEPS = 6;
+const TOTAL_STEPS = 3;
 
-const STAGES = ["Pre-idea / exploring","Pre-seed","Seed","Series A","Series B+"];
-const SECTORS = ["Fintech","Healthtech","EdTech","Climate / Cleantech","Consumer","B2B SaaS","AI / ML","Biotech","Real estate tech","Logistics","Defense / deep tech","Social / creator economy","Other"];
-const ASKS = ["Intro call","Investment consideration","Advice / feedback","Warm intro to other investors","Co-investor"];
-const COUNTS = ["3","5"];
+const EMOTIONS = [
+  "Anxious", "Stuck", "Lost", "Overwhelmed",
+  "Like a fraud", "Afraid to fail", "Directionless",
+  "Burnt out", "Lonely", "Restless",
+];
+
+const COUNTS = ["3", "5"];
 
 const LOAD_MSGS = [
-  "Scanning investor portfolios...",
-  "Matching your thesis to known deals...",
-  "Cross-referencing fund mandates...",
-  "Finding who backed companies like yours...",
-  "Pulling contact intel...",
-  "Drafting your pitch emails...",
-  "Almost ready...",
+  "Searching the archives...",
+  "Reading letters never meant for us...",
+  "Finding the right voices...",
+  "Crossing centuries...",
+  "Almost there...",
 ];
 
 function extractJSON(raw) {
@@ -170,82 +293,58 @@ function ProgressTrack({ current, total }) {
   return (
     <div className="progress-track">
       {Array.from({length:total}).map((_,i) => (
-        <div key={i} className={"ptick" + (i<current?" done":"") + (i===current?" active":"")} />
+        <div key={i} className={"ptick"+(i<current?" done":"")+(i===current?" active":"")} />
       ))}
     </div>
   );
 }
 
-function InvestorCard({ inv, idx }) {
-  const [showPitch, setShowPitch] = useState(false);
-  const [copied, setCopied] = useState(false);
-
-  let subject = "", body = inv.email || "";
-  const m = (inv.email||"").match(/^Subject:\s*(.+)/i);
-  if (m) { subject = m[1].trim(); body = (inv.email||"").replace(/^Subject:\s*.+\n*/i,"").trim(); }
-
-  function copy() {
-    navigator.clipboard.writeText(inv.email||"").then(()=>{ setCopied(true); setTimeout(()=>setCopied(false),2000); });
-  }
-
-  const sources = Array.isArray(inv.otherSources) ? inv.otherSources : [];
-  const portfolio = Array.isArray(inv.notablePortfolio) ? inv.notablePortfolio : [];
-
+function MentorCard({ mentor, idx }) {
   return (
-    <div className="inv-card">
-      <div className="inv-top">
-        <div className="inv-num">0{idx+1}</div>
-        <div className="inv-info">
-          <div className="inv-name">{inv.name}</div>
-          <div className="inv-role">{inv.title}{inv.firm ? " · " + inv.firm : ""}{inv.location ? " · " + inv.location : ""}</div>
+    <div className="mentor-card">
+      <div className="mentor-top">
+        <div>
+          <div className="mentor-name">{mentor.name}</div>
+          {mentor.years && <div className="mentor-years">{mentor.years}</div>}
         </div>
-        <div className="inv-score">{inv.matchScore}%</div>
       </div>
-
-      {inv.investmentFocus && <div className="inv-focus">"{inv.investmentFocus}"</div>}
-
-      {portfolio.length > 0 && (
-        <div className="portfolio-row">
-          {portfolio.map((c,i) => <span key={i} className="portfolio-tag">{c}</span>)}
+      {mentor.sourceTitle && (
+        <div className="mentor-source">
+          {mentor.sourceTitle}{mentor.sourceDate ? " · " + mentor.sourceDate : ""}
         </div>
       )}
 
-      <div className="inv-why">{inv.whyRelevant}</div>
+      {mentor.context && <div className="mentor-context">{mentor.context}</div>}
 
-      <div className="inv-links">
-        {inv.profileUrl && inv.profileUrl !== "null" && (
-          <a className="inv-link primary" href={inv.profileUrl} target="_blank" rel="noopener noreferrer">↗ Profile</a>
+      {mentor.passage && (
+        <div className="passage-wrap">
+          <div className="passage-text">{mentor.passage}</div>
+          {mentor.name && (
+            <div className="passage-attr">— {mentor.name}{mentor.sourceDate ? ", " + mentor.sourceDate : ""}</div>
+          )}
+        </div>
+      )}
+
+      {mentor.resonance && <div className="resonance-text">{mentor.resonance}</div>}
+
+      <div className="mentor-footer">
+        {mentor.sourceUrl && mentor.sourceUrl !== "null" && (
+          <a className="source-link" href={mentor.sourceUrl} target="_blank" rel="noopener noreferrer">
+            Read original source ↗
+          </a>
         )}
-        {sources.map((s,i) => s&&s.url&&s.url!=="null" ? (
-          <a key={i} className="inv-link" href={s.url} target="_blank" rel="noopener noreferrer">↗ {s.label||"Source"}</a>
-        ) : null)}
+        {mentor.sourceLabel && !mentor.sourceUrl && (
+          <span style={{fontSize:12,color:"var(--ink3)",letterSpacing:"0.04em",textTransform:"uppercase"}}>{mentor.sourceLabel}</span>
+        )}
       </div>
-
-      <div className="inv-actions">
-        <button className="act-btn" onClick={()=>setShowPitch(v=>!v)}>
-          {showPitch ? "Hide pitch" : "Pitch email"}
-        </button>
-      </div>
-
-      {showPitch && inv.email && (
-        <div className="pitch-block">
-          <div className="pitch-label">{subject ? "Subject: " + subject : "Cold pitch"}</div>
-          <div className="pitch-body">{body}</div>
-          <button className="copy-btn" onClick={copy}>{copied ? "✓ Copied" : "Copy email"}</button>
-        </div>
-      )}
     </div>
   );
 }
 
 function App() {
   const [step, setStep] = useState(0);
-  const [founderName, setFounderName] = useState("");
-  const [founderBio, setFounderBio] = useState("");
-  const [startupDesc, setStartupDesc] = useState("");
-  const [sector, setSector] = useState("Fintech");
-  const [stage, setStage] = useState("Pre-seed");
-  const [ask, setAsk] = useState("Intro call");
+  const [problem, setProblem] = useState("");
+  const [emotion, setEmotion] = useState("Anxious");
   const [count, setCount] = useState("3");
 
   const [loading, setLoading] = useState(false);
@@ -258,7 +357,7 @@ function App() {
   useEffect(() => {
     if (loading) {
       setLoadIdx(0);
-      timerRef.current = setInterval(() => setLoadIdx(i => (i+1) % LOAD_MSGS.length), 2600);
+      timerRef.current = setInterval(() => setLoadIdx(i => (i+1) % LOAD_MSGS.length), 3000);
     } else { clearInterval(timerRef.current); }
     return () => clearInterval(timerRef.current);
   }, [loading]);
@@ -269,20 +368,20 @@ function App() {
       const res = await fetch(PROXY_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ startupDesc, stage, sector, ask, founderName, founderBio, count })
+        body: JSON.stringify({ problem, emotion, count })
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       setRawDebug(data.debug || "");
       const parsed = extractJSON(data.jsonText || "");
       if (!parsed || !Array.isArray(parsed) || parsed.length === 0) {
-        throw new Error("Could not parse results.\n\n" + (data.jsonText||"").slice(0,300));
+        throw new Error("No historical parallels found. Try describing your situation differently.\n\n" + (data.jsonText||"").slice(0,200));
       }
       setResults(parsed);
-      setStep(8);
+      setStep(5);
     } catch(e) {
       setError(e.message);
-      setStep(9);
+      setStep(6);
     } finally { setLoading(false); }
   }
 
@@ -292,40 +391,41 @@ function App() {
 
   if (loading) return (
     <div className="shell">
-      <div className="top-bar"><div className="wordmark">Pitch<span>Match</span></div></div>
+      <div className="top-bar"><div className="wordmark">Dead <em>Mentors</em></div></div>
       <div className="load-wrap">
-        <div className="load-icon" />
+        <div className="load-hourglass">⧗</div>
         <div className="load-msg">{LOAD_MSGS[loadIdx]}</div>
-        <div className="load-sub">Usually 15–25 seconds</div>
+        <div className="load-sub">Searching centuries of letters and diaries</div>
       </div>
     </div>
   );
 
   function renderContent() {
-    if (step === 8 && results) return (
+    if (step === 5 && results) return (
       <div className="results-wrap">
         <div className="results-head">
-          <div className="results-title">Your investors.</div>
-          <div className="results-meta">{results.length} matched · {sector} · {stage}</div>
+          <div className="results-title">They've been here too.</div>
+          <div className="results-sub">{results.length} voices across history · {emotion.toLowerCase()}</div>
         </div>
-        <div className="results-tip">
-          The best cold pitches are 3–4 sentences: what you're building, why you're the person to build it, and one specific reason you're reaching out to them. No deck attachments on first contact.
+        <div className="results-note">
+          These are not motivational quotes. They are the actual words — letters, diary entries, speeches — of people who sat with what you are sitting with now. Read slowly.
         </div>
-        {results.map((inv,i) => <InvestorCard key={i} inv={inv} idx={i} />)}
-        <button className="restart-btn" onClick={restart}>← New search</button>
+        <div className="divider">· · ·</div>
+        {results.map((m,i) => <MentorCard key={i} mentor={m} idx={i} />)}
+        <button className="restart-btn" onClick={restart}>← Ask again</button>
       </div>
     );
 
-    if (step === 9) return (
+    if (step === 6) return (
       <div className="step-wrap">
-        <div className="step-tag">Error</div>
-        <div className="step-q">Something went wrong.</div>
+        <div className="step-tag">Something went wrong</div>
+        <div className="step-q">The archives were quiet.</div>
         <div className="err-box">
           {error}
           {rawDebug && <div className="err-raw">{rawDebug}</div>}
         </div>
         <div className="nav">
-          <button className="btn-go" onClick={()=>{ setError(""); setStep(5); }}>Try again</button>
+          <button className="btn-go" onClick={()=>{ setError(""); setStep(2); }}>Try again</button>
           <button className="btn-skip" onClick={restart}>Start over</button>
         </div>
       </div>
@@ -334,96 +434,61 @@ function App() {
     switch(step) {
       case 0: return (
         <div className="step-wrap">
-          <div className="step-tag">{step+1} / {TOTAL_STEPS}</div>
-          <div className="step-q">What's your name?</div>
-          <div className="step-hint">Your pitch emails will be signed with this.</div>
-          <input className="input-line" placeholder="Your full name" value={founderName} onChange={e=>setFounderName(e.target.value)} onKeyDown={e=>e.key==="Enter"&&next()} autoFocus />
-          <div className="nav">
-            <button className="btn-go" onClick={next}>Continue</button>
-            <button className="btn-skip" onClick={next}>Skip</button>
+          <div className="step-tag">I</div>
+          <div className="step-q">What's weighing on you?</div>
+          <div className="step-hint">Describe it plainly. The more specific you are, the more precisely we can search the historical record.</div>
+          <textarea
+            className="textarea-field"
+            placeholder="e.g. I feel like everyone around me knows what they're doing and I don't. I'm halfway through college and still have no idea what I actually want."
+            value={problem}
+            onChange={e => setProblem(e.target.value)}
+            rows={4}
+            autoFocus
+          />
+          <div className="nav" style={{marginTop:24}}>
+            <button className="btn-go" onClick={next} disabled={!problem.trim()}>Continue</button>
           </div>
         </div>
       );
+
       case 1: return (
         <div className="step-wrap">
-          <div className="step-tag">{step+1} / {TOTAL_STEPS}</div>
-          <div className="step-q">Tell me about yourself.</div>
-          <div className="step-hint">Your background as a founder — why you're the right person to build this.</div>
-          <input className="input-line" placeholder="e.g. Ex-Goldman analyst, 2x founder, MIT CS grad" value={founderBio} onChange={e=>setFounderBio(e.target.value)} onKeyDown={e=>e.key==="Enter"&&next()} autoFocus />
+          <div className="step-tag">II</div>
+          <div className="step-q">How does it feel?</div>
+          <div className="step-hint">Choose the word that fits closest. This helps find the right emotional register in the historical record.</div>
+          <div className="chip-set">
+            {EMOTIONS.map(e => (
+              <button key={e} className={"chip"+(emotion===e?" on":"")} onClick={()=>setEmotion(e)}>{e}</button>
+            ))}
+          </div>
           <div className="nav">
             <button className="btn-back" onClick={back}>Back</button>
             <button className="btn-go" onClick={next}>Continue</button>
-            <button className="btn-skip" onClick={next}>Skip</button>
           </div>
         </div>
       );
+
       case 2: return (
         <div className="step-wrap">
-          <div className="step-tag">{step+1} / {TOTAL_STEPS}</div>
-          <div className="step-q">What are you building?</div>
-          <div className="step-hint">One or two sentences. Be specific — the clearer the problem and market, the better the investor matches.</div>
-          <textarea className="textarea-line" placeholder='e.g. "A platform that automates compliance for crypto exchanges. Targeting mid-size exchanges spending $2M+/yr on manual compliance ops."' value={startupDesc} onChange={e=>setStartupDesc(e.target.value)} rows={3} autoFocus />
-          <div className="nav" style={{marginTop:24}}>
-            <button className="btn-back" onClick={back}>Back</button>
-            <button className="btn-go" onClick={next}>Continue</button>
+          <div className="step-tag">III</div>
+          <div className="step-q">How many voices?</div>
+          <div className="step-hint">Three is enough to sit with. Five if you want the full breadth.</div>
+          <div className="chip-set" style={{marginBottom:32}}>
+            {COUNTS.map(c => (
+              <button key={c} className={"chip"+(count===c?" on":"")} onClick={()=>setCount(c)}>{c} mentors</button>
+            ))}
           </div>
-        </div>
-      );
-      case 3: return (
-        <div className="step-wrap">
-          <div className="step-tag">{step+1} / {TOTAL_STEPS}</div>
-          <div className="step-q">What sector are you in?</div>
-          <div className="step-hint">Pick the closest fit — this shapes which investor theses we match against.</div>
-          <div className="chip-set">
-            {SECTORS.map(s => <button key={s} className={"chip"+(sector===s?" on":"")} onClick={()=>setSector(s)}>{s}</button>)}
+          <div style={{marginTop:8}}>
+            <div className="sum-line">Your situation: <strong>"{problem.slice(0,80)}{problem.length>80?"...":""}"</strong></div>
+            <div className="sum-line">Feeling: <strong>{emotion}</strong></div>
           </div>
           <div className="nav">
             <button className="btn-back" onClick={back}>Back</button>
-            <button className="btn-go" onClick={next}>Continue</button>
+            <button className="btn-go" onClick={()=>{ setStep(10); runSearch(); }}>Search the archives →</button>
           </div>
         </div>
       );
-      case 4: return (
-        <div className="step-wrap">
-          <div className="step-tag">{step+1} / {TOTAL_STEPS}</div>
-          <div className="step-q">What stage are you at?</div>
-          <div className="step-hint">Different stages attract different investor profiles. Be honest.</div>
-          <div className="chip-set" style={{marginBottom:24}}>
-            {STAGES.map(s => <button key={s} className={"chip"+(stage===s?" on":"")} onClick={()=>setStage(s)}>{s}</button>)}
-          </div>
-          <div className="step-hint" style={{marginBottom:12}}>What are you asking for?</div>
-          <div className="chip-set">
-            {ASKS.map(a => <button key={a} className={"chip"+(ask===a?" on":"")} onClick={()=>setAsk(a)}>{a}</button>)}
-          </div>
-          <div className="nav">
-            <button className="btn-back" onClick={back}>Back</button>
-            <button className="btn-go" onClick={next}>Continue</button>
-          </div>
-        </div>
-      );
-      case 5: return (
-        <div className="step-wrap">
-          <div className="step-tag">Ready</div>
-          <div className="step-q">Here's the pitch.</div>
-          <div style={{marginBottom:8}}>
-            {startupDesc && <div className="summary-line">"{startupDesc}"</div>}
-            <div className="summary-line">Sector: <strong>{sector}</strong></div>
-            <div className="summary-line">Stage: <strong>{stage}</strong></div>
-            <div className="summary-line">Ask: <strong>{ask}</strong></div>
-            <div className="summary-line" style={{marginTop:10}}>Finding <strong>{count} investors</strong> who fund companies like this.</div>
-          </div>
-          <div style={{marginTop:16}}>
-            <div className="step-hint" style={{marginBottom:10}}>How many matches?</div>
-            <div className="chip-set">
-              {COUNTS.map(c => <button key={c} className={"chip"+(count===c?" on":"")} onClick={()=>setCount(c)}>{c} investors</button>)}
-            </div>
-          </div>
-          <div className="nav">
-            <button className="btn-back" onClick={back}>Back</button>
-            <button className="btn-go" onClick={()=>{ setStep(10); runSearch(); }}>Find investors →</button>
-          </div>
-        </div>
-      );
+
       default: return null;
     }
   }
@@ -431,8 +496,8 @@ function App() {
   return (
     <div className="shell">
       <div className="top-bar">
-        <div className="wordmark">Pitch<span>Match</span></div>
-        {step < 6 && <ProgressTrack current={step} total={TOTAL_STEPS} />}
+        <div className="wordmark">Dead <em>Mentors</em></div>
+        {step < 3 && <ProgressTrack current={step} total={TOTAL_STEPS} />}
       </div>
       {renderContent()}
     </div>
